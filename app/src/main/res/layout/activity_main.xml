@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6CC4F0"
+    tools:context=".MainActivity">
+
+    <ToggleButton
+        android:id="@+id/EnviarUbicacion_TGBT"
+        android:layout_width="91dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="140dp"
+        android:text="Enviar ubicacion"
+        app:layout_constraintStart_toEndOf="@+id/TV_EnviarUbicacion"
+        app:layout_constraintTop_toBottomOf="@+id/TV_Latitud" />
+
+    <TextView
+        android:id="@+id/TV_Latitud"
+        android:layout_width="257dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="40dp"
+        android:text="Latitud"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TV_Longitud" />
+
+    <TextView
+        android:id="@+id/TV_Longitud"
+        android:layout_width="255dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="84dp"
+        android:text="Longitud"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/GetLocation_Bt"
+        android:layout_width="163dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="60dp"
+        android:backgroundTint="#F03C4E"
+        android:fontFamily="serif"
+        android:text="Obtener coordenadas"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TV_Latitud" />
+
+    <TextView
+        android:id="@+id/TV_EnviarUbicacion"
+        android:layout_width="159dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Enviar Ubicacion"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GetLocation_Bt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
