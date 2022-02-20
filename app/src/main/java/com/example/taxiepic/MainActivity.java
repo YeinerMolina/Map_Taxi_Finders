@@ -9,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -22,14 +24,26 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_PERMISSION_LOCATION = 100;
+    final int PUERTO = 1024;
+    byte[] buffer = new byte[1024];
+    Handler handler = new Handler();
+    private boolean estado = false;
+    private final int delay = 5000;
+    UdpClientThread udpClientThread;
     public static List<Address> addresses;
-    Button BtCoords, BtSend;
+    Button BtCoords;
+    ToggleButton BtSend;
+    EditText IP;
     android.widget.TextView Latitud, Longitud;
     FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -38,12 +52,34 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BtSend = (Button) findViewById(R.id.EnviarUbicacion_TGBT);
+        IP = (EditText) findViewById(R.id.PublicIP_ET);
         BtCoords = (Button) findViewById(R.id.GetLocation_Bt);
+        BtSend = (ToggleButton) findViewById(R.id.BtSend);
         Longitud = (TextView) findViewById(R.id.TV_Longitud);
         Latitud = (TextView) findViewById(R.id.TV_Latitud);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+        BtSend.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+
+                if (isChecked) {
+                    estado = true;
+                    Send_Data();
+                } else {
+                    estado = false;
+                    Send_Data();
+
+                }
+            }else{
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.INTERNET}, 1000);
+            }
+
+        });
+
 
         BtCoords.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +120,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void Send_Data(){
+        handler.postDelayed(new Runnable() {
+
+            public void run() {
+
+                udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString());
+                udpClientThread.start();
+
+                if(estado) {
+                    handler.postDelayed(this, delay);
+                    Toast.makeText(MainActivity.this, "Encendido y enviando", Toast.LENGTH_SHORT).show();
+                } else {
+                    handler.getLooper();
+                    Toast.makeText(MainActivity.this, "Apagado y no enviando", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+        }, delay);
     }
 
 }

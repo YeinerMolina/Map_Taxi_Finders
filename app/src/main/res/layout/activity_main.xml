@@ -7,22 +7,37 @@
     android:background="#6CC4F0"
     tools:context=".MainActivity">
 
-    <ToggleButton
-        android:id="@+id/EnviarUbicacion_TGBT"
-        android:layout_width="91dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="140dp"
-        android:text="Enviar ubicacion"
-        app:layout_constraintStart_toEndOf="@+id/TV_EnviarUbicacion"
+    <Button
+        android:id="@+id/GetLocation_Bt"
+        android:layout_width="139dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="52dp"
+        android:backgroundTint="#F03C4E"
+        android:fontFamily="serif"
+        android:text="Obtener coordenadas"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TV_Latitud" />
+
+    <EditText
+        android:id="@+id/PublicIP_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="Public IP"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/TV_Latitud"
         android:layout_width="257dp"
         android:layout_height="37dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
         android:text="Latitud"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,35 +47,21 @@
         android:id="@+id/TV_Longitud"
         android:layout_width="255dp"
         android:layout_height="38dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="84dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="104dp"
         android:text="Longitud"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/GetLocation_Bt"
-        android:layout_width="163dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="60dp"
-        android:backgroundTint="#F03C4E"
-        android:fontFamily="serif"
-        android:text="Obtener coordenadas"
-        app:layout_constraintStart_toStartOf="parent"
+    <ToggleButton
+        android:id="@+id/BtSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="52dp"
+        android:text="ToggleButton"
+        app:layout_constraintStart_toEndOf="@+id/GetLocation_Bt"
         app:layout_constraintTop_toBottomOf="@+id/TV_Latitud" />
-
-    <TextView
-        android:id="@+id/TV_EnviarUbicacion"
-        android:layout_width="159dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="Enviar Ubicacion"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/GetLocation_Bt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
