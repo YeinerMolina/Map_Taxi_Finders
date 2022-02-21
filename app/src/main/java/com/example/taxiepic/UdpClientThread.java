@@ -9,15 +9,16 @@ import java.net.InetAddress;
 public class UdpClientThread extends Thread{
     int dstPort;
     String ubicacion;
-
+    String IPPC;
     DatagramSocket socket;
     InetAddress address;
 
 
-    public UdpClientThread(int puerto_servidor, String toString) {
+    public UdpClientThread(int puerto_servidor, String toString, String IP) {
         super();
         dstPort = puerto_servidor;
         ubicacion = toString;
+        IPPC = IP;
 
     }
 
@@ -31,7 +32,7 @@ public class UdpClientThread extends Thread{
 
         try {
             socket = new DatagramSocket();
-            address= InetAddress.getByName("186.98.9.134");
+            address= InetAddress.getByName(IPPC);
             String mensaje = ubicacion;
 
             byte[] buffer = mensaje.getBytes();

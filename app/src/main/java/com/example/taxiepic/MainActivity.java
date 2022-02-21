@@ -64,14 +64,17 @@ public class MainActivity extends AppCompatActivity {
         BtSend.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-
-                if (isChecked) {
-                    estado = true;
+                if((MainActivity.addresses != null && !IP.getText().toString().isEmpty())){
+                    if (isChecked) {
+                        estado = true;
+                    } else {
+                        estado = false;
+                    }
                     Send_Data();
+                }else if(IP.getText().toString().isEmpty()){
+                    Toast.makeText(MainActivity.this, "La IP no puede estar vacia", Toast.LENGTH_SHORT).show();
                 } else {
-                    estado = false;
-                    Send_Data();
-
+                    Toast.makeText(MainActivity.this, "No hay coordenadas para enviar", Toast.LENGTH_SHORT).show();
                 }
             }else{
                 ActivityCompat.requestPermissions(MainActivity.this,
@@ -124,10 +127,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void Send_Data(){
         handler.postDelayed(new Runnable() {
-
             public void run() {
 
-                udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString());
+                udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString(), IP.getText().toString());
                 udpClientThread.start();
 
                 if(estado) {
@@ -142,5 +144,4 @@ public class MainActivity extends AppCompatActivity {
 
         }, delay);
     }
-
 }
