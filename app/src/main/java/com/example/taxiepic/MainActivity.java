@@ -28,6 +28,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
@@ -35,17 +36,19 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     final int PUERTO = 1024;
-    byte[] buffer = new byte[1024];
     Handler handler = new Handler();
-    private boolean estado = false;
-    private final int delay = 5000;
     UdpClientThread udpClientThread;
+    private boolean Status = false;
+    private final int delay = 5000;
     public static List<Address> addresses;
+    InetAddress IPaddress;
+    String TimeVar;
     Button BtCoords;
     ToggleButton BtSend;
     EditText IP;
-    android.widget.TextView Latitud, Longitud;
+    android.widget.TextView Latitud, Longitud, Time;
     FusedLocationProviderClient fusedLocationProviderClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,25 +67,38 @@ public class MainActivity extends AppCompatActivity {
         BtSend.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-                if((MainActivity.addresses != null && !IP.getText().toString().isEmpty())){
+                if ((MainActivity.addresses != null && !IP.getText().toString().isEmpty())) {
                     if (isChecked) {
-                        estado = true;
+                        Status = true;
                     } else {
-                        estado = false;
+                        Status = false;
                     }
                     Send_Data();
-                }else if(IP.getText().toString().isEmpty()){
+                } else if (IP.getText().toString().isEmpty()) {
+                    BtSend.setChecked(false);
                     Toast.makeText(MainActivity.this, "La IP no puede estar vacia", Toast.LENGTH_SHORT).show();
                 } else {
+                    BtSend.setChecked(false);
                     Toast.makeText(MainActivity.this, "No hay coordenadas para enviar", Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{Manifest.permission.INTERNET}, 1000);
             }
 
         });
 
+
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            GetCoords();
+        } else {
+
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
+
+        }
 
         BtCoords.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,12 +143,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void Send_Data(){
         handler.postDelayed(new Runnable() {
+
             public void run() {
-
-                udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString(), IP.getText().toString());
+                try {
+                IPaddress = InetAddress.getByName(IP.getText().toString());
+                udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString(), IPaddress);
                 udpClientThread.start();
-
-                if(estado) {
+//181.235.65.8
+                if(Status) {
                     handler.postDelayed(this, delay);
                     Toast.makeText(MainActivity.this, "Encendido y enviando", Toast.LENGTH_SHORT).show();
                 } else {
@@ -140,8 +158,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Apagado y no enviando", Toast.LENGTH_SHORT).show();
                 }
 
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
 
-        }, delay);
+        }}
+    , delay);
     }
+
 }
