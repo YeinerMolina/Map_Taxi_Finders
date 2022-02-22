@@ -35,7 +35,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    final int PUERTO = 1024;
+    int PUERTO;
+    String PuertoString;
     Handler handler = new Handler();
     UdpClientThread udpClientThread;
     private boolean Status = false;
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     String TimeVar;
     Button BtCoords;
     ToggleButton BtSend;
-    EditText IP;
+    EditText IP, Port;
     android.widget.TextView Latitud, Longitud, Time;
     FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -55,11 +56,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Port = (EditText) findViewById(R.id.PORT_ET);
         IP = (EditText) findViewById(R.id.PublicIP_ET);
         BtCoords = (Button) findViewById(R.id.GetLocation_Bt);
         BtSend = (ToggleButton) findViewById(R.id.BtSend);
         Longitud = (TextView) findViewById(R.id.TV_Longitud);
         Latitud = (TextView) findViewById(R.id.TV_Latitud);
+        Port = (EditText) findViewById(R.id.PORT_ET);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         BtSend.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-                if ((MainActivity.addresses != null && !IP.getText().toString().isEmpty())) {
+                if ((MainActivity.addresses != null && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
                     if (isChecked) {
                         Status = true;
                     } else {
@@ -77,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (IP.getText().toString().isEmpty()) {
                     BtSend.setChecked(false);
                     Toast.makeText(MainActivity.this, "La IP no puede estar vacia", Toast.LENGTH_SHORT).show();
+                } else if (Port.getText().toString().isEmpty()) {
+                    BtSend.setChecked(false);
+                    Toast.makeText(MainActivity.this, "Debe indicar el puerto", Toast.LENGTH_SHORT).show();
                 } else {
                     BtSend.setChecked(false);
                     Toast.makeText(MainActivity.this, "No hay coordenadas para enviar", Toast.LENGTH_SHORT).show();
@@ -146,10 +152,12 @@ public class MainActivity extends AppCompatActivity {
 
             public void run() {
                 try {
+                PuertoString = Port.getText().toString();
+                PUERTO = Integer.parseInt(PuertoString);
                 IPaddress = InetAddress.getByName(IP.getText().toString());
                 udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString(), IPaddress);
                 udpClientThread.start();
-//181.235.65.8
+
                 if(Status) {
                     handler.postDelayed(this, delay);
                     Toast.makeText(MainActivity.this, "Encendido y enviando", Toast.LENGTH_SHORT).show();
