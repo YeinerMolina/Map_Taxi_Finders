@@ -7,144 +7,181 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img"
+    android:background="#2A3132"
     android:textAlignment="center"
     tools:context=".MainActivity">
 
 
     <EditText
         android:id="@+id/PublicIP_ET"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="112dp"
-        android:background="#631B1A1A"
+        android:layout_width="188dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:fontFamily="@font/doppio_one"
-        android:hint="INGRESE LA DIRECCIÓN IP"
+        android:hint="IP PUBLICA"
         android:inputType="phone"
 
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#FBFBFB"
-        android:textColorHint="#FFCA28"
+        android:textColor="#90AFC5"
+        android:textColorHint="#90AFC5"
         android:textStyle="bold"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/PORT_ET"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="44dp"
-        android:background="#631B1A1A"
-        android:ems="10"
-        android:fontFamily="@font/doppio_one"
-        android:hint="INGRESE EL PUERTO"
-        android:inputType="phone"
-
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#FBFBFB"
-        android:textColorHint="#FFCA28"
-        android:textStyle="bold"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/TV_Latitud"
-        android:layout_width="255dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="16dp"
-        android:background="#CD000000"
-        android:bottomLeftRadius="10dp"
-        android:bottomRightRadius="10dp"
-        android:fontFamily="@font/doppio_one"
-        android:text="Latitud"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:topLeftRadius="10dp"
-        android:topRightRadius="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TV_Longitud" />
 
     <TextView
         android:id="@+id/TV_Latitud2"
         android:layout_width="175dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="164dp"
-        android:background="#CD000000"
+        android:layout_height="48dp"
+        android:layout_marginTop="132dp"
         android:bottomLeftRadius="10dp"
         android:bottomRightRadius="10dp"
         android:fontFamily="@font/doppio_one"
         android:text="Enviar ubicacion:"
-        android:textColor="#FFFFFF"
+        android:textAlignment="center"
+        android:textColor="#90AFC5"
         android:textSize="20sp"
         android:textStyle="bold"
         android:topLeftRadius="10dp"
         android:topRightRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.244"
+        app:layout_constraintHorizontal_bias="0.216"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TV_Longitud" />
-
-    <Button
-        android:id="@+id/GetLocation_Bt"
-        android:layout_width="139dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="28dp"
-        android:backgroundTint="#F03C4E"
-        android:fontFamily="@font/doppio_one"
-        android:text="Obtener coordenadas"
-        android:textSize="11sp"
-        android:textStyle="bold"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TV_Latitud" />
+        app:layout_constraintTop_toBottomOf="@+id/Coords_TV" />
 
     <ToggleButton
         android:id="@+id/BtSend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_width="89dp"
+        android:layout_height="48dp"
+
+
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#763626"
         android:fontFamily="@font/doppio_one"
-
-
         android:text="ToggleButton"
+        android:textColor="#90AFC5"
         app:layout_constraintStart_toEndOf="@+id/TV_Latitud2"
-        app:layout_constraintTop_toBottomOf="@+id/GetLocation_Bt" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="130dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.04"
+        app:layout_constraintStart_toEndOf="@+id/GetLocation_Bt"
+        app:layout_constraintTop_toBottomOf="@+id/Hora_TV">
+
+        <TextView
+            android:id="@+id/TCP_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TCP"
+            android:textAlignment="viewEnd"
+            android:textColor="#90AFC5" />
+
+        <Switch
+            android:id="@+id/ProtocolType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/UDP_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="UDP"
+            android:textAlignment="viewStart"
+            android:textColor="#90AFC5" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/GetLocation_Bt"
+        android:layout_width="140dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#763626"
+        android:fontFamily="@font/doppio_one"
+        android:text="Obtener coordenadas"
+        android:textColor="#90AFC5"
+
+        android:textSize="11sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Hora_TV" />
+
+    <EditText
+        android:id="@+id/PORT_ET"
+        android:layout_width="113dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:fontFamily="@font/doppio_one"
+        android:hint="PUERTO"
+        android:inputType="phone"
+
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#90AFC5"
+        android:textColorHint="#90AFC5"
+        android:textStyle="bold"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.078"
+        app:layout_constraintStart_toEndOf="@+id/PublicIP_ET"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/TV_Longitud"
+        android:id="@+id/Coords_TV"
         style="@style/Widget.AppCompat.TextView"
-        android:layout_width="255dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="305dp"
+        android:layout_height="71dp"
+        android:layout_marginTop="4dp"
         android:autoText="false"
-        android:background="#CD000000"
         android:backgroundTint="#000000"
         android:fontFamily="@font/doppio_one"
         android:shadowColor="#F11616"
         android:singleLine="false"
-        android:text="Longitud"
+        android:text="Coordenadas"
         android:textAlignment="textStart"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
+        android:textColor="#90AFC5"
         android:textColorHighlight="#FFC200"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.436"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PublicIP_ET" />
+
+    <TextView
+        android:id="@+id/Hora_TV"
+        android:layout_width="305dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="4dp"
+        android:bottomLeftRadius="10dp"
+        android:bottomRightRadius="10dp"
+        android:fontFamily="@font/doppio_one"
+        android:text="Hora"
+        android:textColor="#90AFC5"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:topLeftRadius="10dp"
+        android:topRightRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.436"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Coords_TV" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

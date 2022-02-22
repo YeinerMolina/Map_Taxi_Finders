@@ -9,11 +9,13 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -24,30 +26,29 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     int PUERTO;
-    String PuertoString;
+    String PuertoString, TimeVar;
     Handler handler = new Handler();
     UdpClientThread udpClientThread;
     private boolean Status = false;
     private final int delay = 5000;
     public static List<Address> addresses;
+    PrintWriter printWriter;
+    Switch ProtocolSwitch;
     InetAddress IPaddress;
-    String TimeVar;
     Button BtCoords;
     ToggleButton BtSend;
     EditText IP, Port;
-    android.widget.TextView Latitud, Longitud, Time;
+    android.widget.TextView Time, Coords;
     FusedLocationProviderClient fusedLocationProviderClient;
 
 
@@ -56,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ProtocolSwitch = (Switch) findViewById(R.id.ProtocolType);
         Port = (EditText) findViewById(R.id.PORT_ET);
         IP = (EditText) findViewById(R.id.PublicIP_ET);
         BtCoords = (Button) findViewById(R.id.GetLocation_Bt);
         BtSend = (ToggleButton) findViewById(R.id.BtSend);
-        Longitud = (TextView) findViewById(R.id.TV_Longitud);
-        Latitud = (TextView) findViewById(R.id.TV_Latitud);
+        Coords = (TextView) findViewById(R.id.Coords_TV);
+        Time = (TextView) findViewById(R.id.Hora_TV);
         Port = (EditText) findViewById(R.id.PORT_ET);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -71,12 +73,17 @@ public class MainActivity extends AppCompatActivity {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
                 if ((MainActivity.addresses != null && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
-                    if (isChecked) {
-                        Status = true;
+
+                    if (ProtocolSwitch.isChecked()){
+                        if (BtSend.isChecked()) {
+                            Status = true;
+                        } else {
+                            Status = false;
+                        }
+                        Send_Data_UDP();
                     } else {
-                        Status = false;
+                        Send_Data_TCP();
                     }
-                    Send_Data();
                 } else if (IP.getText().toString().isEmpty()) {
                     BtSend.setChecked(false);
                     Toast.makeText(MainActivity.this, "La IP no puede estar vacia", Toast.LENGTH_SHORT).show();
@@ -125,6 +132,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void GetLocation() {
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                Time.setText(String.valueOf("Hora: \n"));
+                Coords.setText(String.valueOf("Coordenadas \n"+ addresses.get(0).getLatitude() + ", " + addresses.get(0).getLongitude()));
+                TimeVar = new java.text.SimpleDateFormat("yyyy/MM/dd,HH:mm:ss.SSS").format(location.getTime());
+                Time.setText(String.valueOf("Hora \n" + TimeVar));
+            }
+        };
+    }
+
+
     private void GetCoords() {
 
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -136,9 +156,9 @@ public class MainActivity extends AppCompatActivity {
                         Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
                         MainActivity.addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
-                        Latitud.setText(String.valueOf("Latitud \n" + addresses.get(0).getLatitude()));
+                        Time.setText(String.valueOf("Hora: \n"));
+                        Coords.setText(String.valueOf("Coordenadas \n"+ addresses.get(0).getLatitude() + ", " + addresses.get(0).getLongitude()));
 
-                        Longitud.setText(String.valueOf("Longitud \n" + addresses.get(0).getLongitude()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -147,7 +167,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void Send_Data(){
+    public void Send_Data_TCP(){
+
+
+        try{
+            PuertoString = Port.getText().toString();
+            PUERTO = Integer.parseInt(PuertoString);
+            IPaddress = InetAddress.getByName(IP.getText().toString());
+            Socket socket = new Socket(IPaddress,PUERTO);
+            printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.write(Coords.getText().toString());
+            printWriter.flush();
+            printWriter.close();
+            socket.close();
+
+        } catch (UnknownHostException ex) {
+            Toast.makeText(MainActivity.this, "Server not found", Toast.LENGTH_SHORT).show();
+        } catch (IOException ex) {
+
+        }
+    }
+
+
+    public void Send_Data_UDP(){
         handler.postDelayed(new Runnable() {
 
             public void run() {
@@ -155,15 +197,14 @@ public class MainActivity extends AppCompatActivity {
                 PuertoString = Port.getText().toString();
                 PUERTO = Integer.parseInt(PuertoString);
                 IPaddress = InetAddress.getByName(IP.getText().toString());
-                udpClientThread = new UdpClientThread(PUERTO, Latitud.getText().toString(), IPaddress);
+                udpClientThread = new UdpClientThread(PUERTO, Coords.getText().toString(), IPaddress);
                 udpClientThread.start();
 
                 if(Status) {
                     handler.postDelayed(this, delay);
-                    Toast.makeText(MainActivity.this, "Encendido y enviando", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Enviando", Toast.LENGTH_SHORT).show();
                 } else {
                     handler.getLooper();
-                    Toast.makeText(MainActivity.this, "Apagado y no enviando", Toast.LENGTH_SHORT).show();
                 }
 
             } catch (UnknownHostException e) {
