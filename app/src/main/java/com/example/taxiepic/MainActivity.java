@@ -39,9 +39,11 @@ public class MainActivity extends AppCompatActivity {
     String PuertoString, TimeVar;
     Handler handler = new Handler();
     UdpClientThread udpClientThread;
+    UTPClientThread utpClientThread;
     private boolean Status = false;
     private final int delay = 5000;
     public static List<Address> addresses;
+    Socket socketUTP;
     PrintWriter printWriter;
     Switch ProtocolSwitch;
     InetAddress IPaddress;
@@ -145,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     private void GetCoords() {
 
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -167,27 +170,31 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void Send_Data_TCP(){
-
+    public void Send_Data_TCP() {
+        handler.postDelayed(new Runnable() {
 
         try{
-            PuertoString = Port.getText().toString();
-            PUERTO = Integer.parseInt(PuertoString);
-            IPaddress = InetAddress.getByName(IP.getText().toString());
-            Socket socket = new Socket(IPaddress,PUERTO);
-            printWriter = new PrintWriter(socket.getOutputStream());
-            printWriter.write(Coords.getText().toString());
-            printWriter.flush();
-            printWriter.close();
-            socket.close();
 
-        } catch (UnknownHostException ex) {
-            Toast.makeText(MainActivity.this, "Server not found", Toast.LENGTH_SHORT).show();
-        } catch (IOException ex) {
+                        PuertoString = Port.getText().toString();
+                        PUERTO = Integer.parseInt(PuertoString);
+                        IPaddress = InetAddress.getByName();
+                        utpClientThread = new UTPClientThread(PUERTO, Coords.getText().toString(), IPaddress)
+                        utpClientThread.start();
 
-        }
+                    } catch(
+                    UnknownHostException ex)
+
+                    {
+                        Toast.makeText(MainActivity.this, "Server not found", Toast.LENGTH_SHORT).show();
+                    } catch(
+                    IOException ex)
+
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+    , delay);
     }
-
 
     public void Send_Data_UDP(){
         handler.postDelayed(new Runnable() {
