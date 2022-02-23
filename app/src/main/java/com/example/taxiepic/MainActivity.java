@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         BtSend.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-                if ((MainActivity.addresses != null && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
+                if ((Coords.getText().toString() != "Coordenadas" && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
                     if (BtSend.isChecked()) {
                         Status = true;
                     } else {
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            GetCoords();
+            GetLocation();
         } else {
 
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -121,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this,
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                    GetCoords();
+                    GetLocation();
                 } else {
 
                     ActivityCompat.requestPermissions(MainActivity.this,
@@ -138,11 +139,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 Time.setText(String.valueOf("Hora: \n"));
-                Coords.setText(String.valueOf("Coordenadas \n"+ addresses.get(0).getLatitude() + ", " + addresses.get(0).getLongitude()));
+                Coords.setText(String.valueOf("Coordenadas \n"+ location.getLatitude() + ", " + location.getLongitude()));
                 TimeVar = new java.text.SimpleDateFormat("yyyy/MM/dd,HH:mm:ss.SSS").format(location.getTime());
                 Time.setText(String.valueOf("Hora \n" + TimeVar));
             }
         };
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            long MIN_TIME = 1000;
+            long MIN_DIST = 5;
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DIST, locationListener);
+
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -172,21 +183,22 @@ public class MainActivity extends AppCompatActivity {
     public void Send_Data_TCP() {
         handler.postDelayed(new Runnable() {
 
-        @Override
-        public void run() {
-            try{
+            @Override
+            public void run() {
+                try{
                     PuertoString = Port.getText().toString();
                     PUERTO = Integer.parseInt(PuertoString);
                     IPaddress = InetAddress.getByName(IP.getText().toString());
-                    tcpClientThread = new TCPClientThread(PUERTO, Coords.getText().toString(), IPaddress);
+                    String Mensaje = Coords.getText().toString()  + Time.getText().toString();
+                    tcpClientThread = new TCPClientThread(PUERTO, Mensaje, IPaddress);
                     tcpClientThread.start();
 
-                if(Status) {
-                    handler.postDelayed(this, delay);
-                    Toast.makeText(MainActivity.this, "Enviando", Toast.LENGTH_SHORT).show();
-                } else {
-                    handler.getLooper();
-                }
+                    if(Status) {
+                        handler.postDelayed(this, delay);
+                        Toast.makeText(MainActivity.this, "Enviando", Toast.LENGTH_SHORT).show();
+                    } else {
+                        handler.getLooper();
+                    }
 
                 } catch(UnknownHostException ex){
                     Toast.makeText(MainActivity.this, "Server not found", Toast.LENGTH_SHORT).show();
@@ -194,32 +206,33 @@ public class MainActivity extends AppCompatActivity {
                     ex.printStackTrace();
                 }
             }},delay);
-        }
+    }
 
     public void Send_Data_UDP(){
         handler.postDelayed(new Runnable() {
 
             public void run() {
                 try {
-                PuertoString = Port.getText().toString();
-                PUERTO = Integer.parseInt(PuertoString);
-                IPaddress = InetAddress.getByName(IP.getText().toString());
-                udpClientThread = new UdpClientThread(PUERTO, Coords.getText().toString(), IPaddress);
-                udpClientThread.start();
+                    PuertoString = Port.getText().toString();
+                    PUERTO = Integer.parseInt(PuertoString);
+                    IPaddress = InetAddress.getByName(IP.getText().toString());
+                    String Mensaje = Coords.getText().toString()  + Time.getText().toString();
+                    udpClientThread = new UdpClientThread(PUERTO, Mensaje, IPaddress);
+                    udpClientThread.start();
 
-                if(Status) {
-                    handler.postDelayed(this, delay);
-                    Toast.makeText(MainActivity.this, "Enviando", Toast.LENGTH_SHORT).show();
-                } else {
-                    handler.getLooper();
+                    if(Status) {
+                        handler.postDelayed(this, delay);
+                        Toast.makeText(MainActivity.this, "Enviando", Toast.LENGTH_SHORT).show();
+                    } else {
+                        handler.getLooper();
+                    }
+
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
                 }
 
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-
-        }}
-    , delay);
+            }}
+            , delay);
     }
 
 }

@@ -45,7 +45,11 @@ public class UdpClientThread extends Thread{
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        } finally {
+            if(socket != null){
+                socket.close();
+            }
         }
 
     }
+}
