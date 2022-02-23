@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     String PuertoString, TimeVar;
     Handler handler = new Handler();
     UdpClientThread udpClientThread;
-    UTPClientThread utpClientThread;
+    TCPClientThread tcpClientThread;
     private boolean Status = false;
     private final int delay = 5000;
     public static List<Address> addresses;
@@ -75,13 +75,12 @@ public class MainActivity extends AppCompatActivity {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
                 if ((MainActivity.addresses != null && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
-
+                    if (BtSend.isChecked()) {
+                        Status = true;
+                    } else {
+                        Status = false;
+                    }
                     if (ProtocolSwitch.isChecked()){
-                        if (BtSend.isChecked()) {
-                            Status = true;
-                        } else {
-                            Status = false;
-                        }
                         Send_Data_UDP();
                     } else {
                         Send_Data_TCP();
@@ -173,28 +172,29 @@ public class MainActivity extends AppCompatActivity {
     public void Send_Data_TCP() {
         handler.postDelayed(new Runnable() {
 
-        try{
+        @Override
+        public void run() {
+            try{
+                    PuertoString = Port.getText().toString();
+                    PUERTO = Integer.parseInt(PuertoString);
+                    IPaddress = InetAddress.getByName(IP.getText().toString());
+                    tcpClientThread = new TCPClientThread(PUERTO, Coords.getText().toString(), IPaddress);
+                    tcpClientThread.start();
 
-                        PuertoString = Port.getText().toString();
-                        PUERTO = Integer.parseInt(PuertoString);
-                        IPaddress = InetAddress.getByName();
-                        utpClientThread = new UTPClientThread(PUERTO, Coords.getText().toString(), IPaddress)
-                        utpClientThread.start();
-
-                    } catch(
-                    UnknownHostException ex)
-
-                    {
-                        Toast.makeText(MainActivity.this, "Server not found", Toast.LENGTH_SHORT).show();
-                    } catch(
-                    IOException ex)
-
-                    {
-                        ex.printStackTrace();
-                    }
+                if(Status) {
+                    handler.postDelayed(this, delay);
+                    Toast.makeText(MainActivity.this, "Enviando", Toast.LENGTH_SHORT).show();
+                } else {
+                    handler.getLooper();
                 }
-    , delay);
-    }
+
+                } catch(UnknownHostException ex){
+                    Toast.makeText(MainActivity.this, "Server not found", Toast.LENGTH_SHORT).show();
+                } catch(IOException ex){
+                    ex.printStackTrace();
+                }
+            }},delay);
+        }
 
     public void Send_Data_UDP(){
         handler.postDelayed(new Runnable() {
