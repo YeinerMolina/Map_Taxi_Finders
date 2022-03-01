@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try{
-                    GetLocation();
+
                     PUERTO = Integer.parseInt(Port.getText().toString());
                     IPaddress = InetAddress.getByName(IP.getText().toString());
                     String Mensaje = String.valueOf(CoordendasTxt + ", "+TimeVar);

@@ -39,13 +39,6 @@ public class TCPClientThread extends Thread{
             DataOS.flush();
             DataOS.close();
             socketTCP.close();
-            Log.d("Datos",ubicacion);
-
-
-            //printWriter = new PrintWriter(socketUTP.getOutputStream());
-            //printWriter.println(ubicacion);
-            //printWriter.flush();
-            //printWriter.close();
 
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
