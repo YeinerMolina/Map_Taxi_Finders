@@ -16,7 +16,7 @@
         android:id="@+id/TV_Latitud2"
         android:layout_width="172dp"
         android:layout_height="30dp"
-        android:layout_marginStart="68dp"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="20dp"
         android:bottomLeftRadius="10dp"
         android:bottomRightRadius="10dp"
@@ -58,7 +58,7 @@
 
 
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginEnd="36dp"
         android:backgroundTint="#004E2F"
         android:fontFamily="@font/doppio_one"
         android:text="ToggleButton"

@@ -44,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean Status = false;
     private final int delay = 5000;
     public static List<Address> addresses;
-    Socket socketUTP;
-    PrintWriter printWriter;
     Switch ProtocolSwitch;
     InetAddress IPaddress;
     Button BtCoords;
@@ -53,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
     EditText IP, Port;
     android.widget.TextView Time, Coords;
     FusedLocationProviderClient fusedLocationProviderClient;
+    String CoordendasTxt;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         ProtocolSwitch = (Switch) findViewById(R.id.ProtocolType);
         Port = (EditText) findViewById(R.id.PORT_ET);
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         BtSend.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (ActivityCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-                if ((Coords.getText().toString() != "Coordenadas" && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
+                if ((CoordendasTxt != null && !IP.getText().toString().isEmpty()) && !Port.getText().toString().isEmpty()) {
                     if (BtSend.isChecked()) {
                         Status = true;
                     } else {
@@ -138,9 +138,10 @@ public class MainActivity extends AppCompatActivity {
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                Time.setText(String.valueOf("Hora: \n"));
-                Coords.setText(String.valueOf("Coordenadas \n"+ location.getLatitude() + ", " + location.getLongitude()));
-                TimeVar = new java.text.SimpleDateFormat("yyyy/MM/dd,HH:mm:ss.SSS").format(location.getTime());
+
+                CoordendasTxt = String.valueOf(location.getLatitude()) +", "+String.valueOf(location.getLongitude());
+                Coords.setText(String.valueOf("Coordenadas \n"+ CoordendasTxt));
+                TimeVar = new java.text.SimpleDateFormat("yyyy/MM/dd, HH:mm:ss.SSS").format(location.getTime());
                 Time.setText(String.valueOf("Hora \n" + TimeVar));
             }
         };
@@ -156,40 +157,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-    private void GetCoords() {
-
-        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if (location != null) {
-                    try {
-                        Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                        MainActivity.addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
-                        Time.setText(String.valueOf("Hora: \n"));
-                        Coords.setText(String.valueOf("Coordenadas \n"+ addresses.get(0).getLatitude() + ", " + addresses.get(0).getLongitude()));
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
     public void Send_Data_TCP() {
         handler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 try{
-                    PuertoString = Port.getText().toString();
-                    PUERTO = Integer.parseInt(PuertoString);
+                    GetLocation();
+                    PUERTO = Integer.parseInt(Port.getText().toString());
                     IPaddress = InetAddress.getByName(IP.getText().toString());
-                    String Mensaje = Coords.getText().toString()  + Time.getText().toString();
+                    String Mensaje = String.valueOf(CoordendasTxt + ", "+TimeVar);
                     tcpClientThread = new TCPClientThread(PUERTO, Mensaje, IPaddress);
                     tcpClientThread.start();
 
@@ -213,10 +190,10 @@ public class MainActivity extends AppCompatActivity {
 
             public void run() {
                 try {
-                    PuertoString = Port.getText().toString();
-                    PUERTO = Integer.parseInt(PuertoString);
+                    GetLocation();
+                    PUERTO = Integer.parseInt(Port.getText().toString());
                     IPaddress = InetAddress.getByName(IP.getText().toString());
-                    String Mensaje = Coords.getText().toString()  + Time.getText().toString();
+                    String Mensaje =  String.valueOf(CoordendasTxt + ", "+TimeVar);
                     udpClientThread = new UdpClientThread(PUERTO, Mensaje, IPaddress);
                     udpClientThread.start();
 
