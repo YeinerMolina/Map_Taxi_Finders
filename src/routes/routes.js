@@ -6,7 +6,7 @@ router.get('/', (req,rest) =>{
 })
 
 router.get('/getData',(req,res) =>{
-    QueryActualizar = "SELECT * FROM taxi.coordenadas ORDER BY (fecha and hora) DESC limit 1";
+    QueryActualizar = "SELECT * FROM taxi.coordenadas ORDER BY fecha, hora DESC LIMIT 1";
     connection.query(QueryActualizar, function(error,data){
         if(error){
             console.log(error);

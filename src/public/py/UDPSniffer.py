@@ -1,37 +1,31 @@
-
-
 from socket import*
 from datetime import*
 import socket
 from tokenize import Double
-import mysql.connector as connector
+from MySQLdb import _mysql
 
 print("Recibiendo Datos...")
 
-direccion = "192.168.1.33", 8502
+direccion = "192.168.0.10", 10000
 print ("Recibiendo En Puerto:", direccion[1])
 socket1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-socket1.bind((direccion))
-
+socket1.bind((direccion))	
+	
 while True:
-	DatRec = socket1.recv(1024)
-	Data = str(DatRec)
-	Final = Data.replace('Coordenadas ',' ')
-	Finale = Final.replace('Hora ',' ')
-	Slash = Finale.replace('\\\\', '\\')
-	Slashes = Slash.replace(r'\n','')
-	Splits = Slashes.replace(',','')
-	Split = Splits.split()
-	dates = datetime.now()
-	print("\nCoordenadas: \n" + "Latitud: " + Split[1] + " Longitud: " + Split[2] + "\n" + "Hora: " + Split[3])
+	try:
+		DatRec = socket1.recv(1024)
+		Data = str(DatRec)
+		Data = Data.replace('b\'','')
+		Data = Data.replace('\'','')
+		Split = Data.split(sep = ', ')
+		dates = datetime.now()
+		print(Split)
 
-	Datos=connector.connect(user='root', password='123456789', 
-                        host='localhost',
-                        database='taxi')
-	Cursor=Datos.cursor()
-	query = ("INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud) value('%f','%s','%f','%f')"  % (1,dates,float(Split[1]),float(Split[2])))
-	Cursor.execute(query)
-
+		bd = _mysql.connect("database-1.cxnmclobctiz.us-east-2.rds.amazonaws.com","WebPageUser","@P4nc170","taxi")
+		cursor = bd.query("INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud,hora) value('%f','%s','%f','%f','%s')"  % (1,Split[2],float(Split[0]),float(Split[1]),Split[3]))
+		bd.close()
+	except _mysql.Error as err:
+		print(err)
 
 
 

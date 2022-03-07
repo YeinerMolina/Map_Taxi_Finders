@@ -31,10 +31,13 @@ function Actualizar(data){
 
 function UpdateMap(data){
 
+    if (typeof marker !== 'undefined'){
+        map.removeLayer(marker);
+    }
     Lat = data[0].latitud;
     Lon = data[0].longitud;
     map.setView([Lat,Lon],14);
-    const marker = L.marker([Lat,Lon]);
+    marker = L.marker([Lat,Lon]);
     marker.bindPopup(Lat + ", "+ Lon);
     map.addLayer(marker);
 }
