@@ -1,8 +1,8 @@
 const router = require('express').Router();
 
 //Routes
-router.get('/', (req,rest) =>{
-    rest.render('index');
+router.get('/', (req,res) =>{
+    res.render('index');
 })
 
 router.get('/getData',(req,res) =>{
