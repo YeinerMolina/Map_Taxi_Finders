@@ -20,11 +20,10 @@ const io = socketIO(server)
 app.use(require('./routes/routes.js'));
 
 
-//sockets
-require('./sockets')(io);
+
 
 //udpserver
-require('./public/js/UDP_Server.js')
+require('./public/js/UDP_Server.js');
 
 //Archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')))
