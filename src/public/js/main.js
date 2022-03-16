@@ -38,7 +38,7 @@ function Actualizar(data){
     id.innerHTML = data[0].ID             // innerHTML establece la conexion en los id's 
     latitud.innerHTML = data[0].latitud
     longitud.innerHTML = data[0].longitud
-    fecha.innerHTML = data[0].fecha.replace("T05:00:00.000Z","")
+    fecha.innerHTML = data[0].fecha.replace("T00:00:00.000Z","")
     hora.innerHTML = data[0].hora
 }
 

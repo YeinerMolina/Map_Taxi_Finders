@@ -8,6 +8,7 @@ server.on('error',(err)=>{
     server.close();
 })
 
+console.log("UDP Server on");
 server.on('message',(msg,rinfo)=>{
         const Mensaje = msg.toString().split(', ')
         QueryInsert = `INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud,hora) value ?`;
