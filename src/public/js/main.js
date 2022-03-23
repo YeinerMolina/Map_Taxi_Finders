@@ -55,7 +55,7 @@ function UpdateMap(data){
     }else{
         map.setView([Lat,Lon],14);
     }
-    (typeof PolyLine !== 'undefined'){
+    if (typeof PolyLine !== 'undefined'){
         map.removeLayer(PolyLine);
     }
 
