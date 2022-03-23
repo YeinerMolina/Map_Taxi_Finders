@@ -27,21 +27,19 @@ margin-right: auto;
 
 }
 
+
 #table-container {
     border-radius:20px;
     width:20%;
     height:20%;
-    display: flex;
     background-color: blue;
     font-family: sans-serif;
     text-align: center;
     opacity: .6;
-    border: none;
+    bottom:40px;
+    left: 4%;
     font-size: 13px;
-    align-content: center;
     color: white;
-    padding: 10px;
-    
+    position: fixed;
     z-index: 20;
-    margin: 10px 10px;
 }
