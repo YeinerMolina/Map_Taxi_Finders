@@ -1,7 +1,7 @@
 const UDPPORT = 10000
 const dgram =  require('dgram');
 const server = dgram.createSocket('udp4');
-const io = require('socket.io');
+const {io} = require('./sockets.js')
 
 server.on('error',(err)=>{
     console.log('Server error: ' + err);
@@ -24,4 +24,5 @@ server.on('message',(msg,rinfo)=>{
 })
 server.bind(UDPPORT)
 
-const connection = require('../../../database/db.js');
+
+const connection = require('../database/db.js');

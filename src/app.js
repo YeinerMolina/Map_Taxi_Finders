@@ -21,9 +21,8 @@ app.use(require('./routes/routes.js'));
 
 
 
-
 //udpserver
-require('./public/js/UDP_Server.js');
+require('./UDP_Server');
 
 //Archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')))

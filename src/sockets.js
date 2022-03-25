@@ -2,24 +2,25 @@ module.exports = io => {
     io.on('connection',(socket) => {
 
         console.log('New user connected');
-        ActualizarDatos(socket);
+        ActualizarDatos();
         
         io.on('Server: NewData',()=>{
-            ActualizarDatos(socket);
+            ActualizarDatos();
         })
-    })
-}
 
-function ActualizarDatos(socket){
-    QueryActualizar = "SELECT * FROM taxi.coordenadas ORDER BY fecha, hora DESC LIMIT 1";
-    connection.query(QueryActualizar, function(error,data){
-        if(error){
-            console.log(error);
+        function ActualizarDatos(){
+            QueryActualizar = "SELECT * FROM taxi.coordenadas ORDER BY fecha, hora DESC LIMIT 1";
+            connection.query(QueryActualizar, function(error,data){
+                if(error){
+                    console.log(error);
+                }
+                else{
+                    socket.emit('server: NewUserCoordenates', data);
+                    console.log('Sended data')
+                }
+            })
         }
-        else{
-            socket.emit('server: NewUserCoordenates', data);
-            console.log('Sended data')
-        }
+
     })
 }
 
