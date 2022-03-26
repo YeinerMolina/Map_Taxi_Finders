@@ -50,7 +50,10 @@ mobiscroll.datepicker('#calendar', {
     controls: ['calendar'],
     selectMultiple: true
 });
-
+mobiscroll.datepicker('#mobi-picker', {
+    controls: ['calendar'],
+    touchUi: true
+});
 
 
 
