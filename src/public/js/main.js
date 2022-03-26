@@ -44,6 +44,18 @@ function Actualizar(data){
 }
 
 
+
+//Calendar
+mobiscroll.datepicker('#calendar', {
+    controls: ['calendar'],
+    selectMultiple: true
+});
+
+
+
+
+
+
 //Actualizar la posición en el mapa
 
 function UpdateMap(data){
