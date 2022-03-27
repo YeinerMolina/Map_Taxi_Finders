@@ -19,7 +19,8 @@ const io = socketIO(server)
 //routes 
 app.use(require('./routes/routes.js'));
 
-
+//Socket
+require('./sockets.js')(io);
 
 //udpserver
 require('./UDP_Server');
