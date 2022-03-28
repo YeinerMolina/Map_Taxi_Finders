@@ -56,7 +56,12 @@ mobiscroll.datepicker('#mobi-picker', {
 });
 
 
-
+var picker = new Lightpick({
+    field: document.getElementById('demo-1'),
+    onSelect: function(date){
+        document.getElementById('result-1').innerHTML = date.format('Do MMMM YYYY');
+    }
+});
 
 
 //Actualizar la posición en el mapa
