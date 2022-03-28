@@ -8,15 +8,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
     <link rel="stylesheet" href="/css/main.css">
-
+    
+    
+    //BOOTSTRAP
+    
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         
-<label>
-    <input id="mobi-picker" mbsc-input />
-    <input type="text" id="datepicker"/>
-</label>
-
-
-
 
 
 </head>
@@ -25,9 +24,27 @@
     <div id="container">
 
         <div id="map-template">
-         <div id="calendar">   
+            
         </div>
-    
+        <script src="moment.min.js"></script>
+        <script src="daterangepicker.js"></script>
+     
+        <script>
+                                $(function() {
+                                  $('input[name="datetimes"]').daterangepicker({
+                                    timePicker: true,
+                                    startDate: moment().startOf('hour'),
+                                    endDate: moment().startOf('hour').add(32, 'hour'),
+                                    locale: {
+                                      format: 'M/DD hh:mm A'
+                                    }
+                                  });
+                                });
+        </script>
+        
+        
+        
+        
         <div id="table-container">
             <table class="text" id="table-LastPosition">
                 <b style="font-size: 18px;">Última ubicación</b>
@@ -53,10 +70,6 @@
     </div>
     
     	
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="lightpick.js"></script>
-    <script> var picker = new Lightpick({ field: document.getElementById('datepicker') }); </script>
-
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <script src="/socket.io/socket.io.min.js"></script>
