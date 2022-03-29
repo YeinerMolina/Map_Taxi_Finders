@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const { exec } = require('child_process');
+
 
 //Routes
 router.get('/', (req,res) =>{
@@ -17,7 +19,7 @@ router.get('/getData',(req,res) =>{
     })
 })
 router.post('/github',(req,res)=>{
-    console.log('push')
+    exec('git pull')
 })
 const connection = require('../../database/db.js');
 module.exports = router;
