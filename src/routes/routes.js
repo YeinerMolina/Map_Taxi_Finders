@@ -16,6 +16,8 @@ router.get('/getData',(req,res) =>{
         }
     })
 })
-
+router.post('/github',(req,res)=>{
+    console.log('push')
+})
 const connection = require('../../database/db.js');
 module.exports = router;
