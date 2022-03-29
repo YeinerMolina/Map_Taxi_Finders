@@ -6,6 +6,7 @@ const database = {
     database: process.env.DATABASE, 
     password: process.env.PASS 
 };
+console.log(database)
 const connection = mysql.createConnection(database)
 
 connection.connect((err) => {
