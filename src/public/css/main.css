@@ -61,7 +61,7 @@ margin-right: auto;
     color: white;
     position: fixed;
     z-index: 55;
-}
+
 
 .date-picker {
 	position: relative;
@@ -144,4 +144,5 @@ margin-right: auto;
 }
 .date-picker .dates .days .day.selected {
 	background-color: #00CA85;
+}
 }
