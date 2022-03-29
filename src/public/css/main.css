@@ -43,7 +43,9 @@ margin-right: auto;
     position: fixed;
     z-index: 20;
 }
-.daterangepicker {
+
+
+#.daterangepicker {
   position: absolute;
   color: inherit;
   background-color: #fff;
