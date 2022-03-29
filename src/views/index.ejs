@@ -8,7 +8,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
     <link rel="stylesheet" href="/css/main.css">
-
+    <link rel="stylesheet" href="https:/stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link href="main.css" rel="stylesheet" />
         
 
 
@@ -43,12 +44,29 @@
                 </tr>
             </table>
         </div>
+        
+        
     </div>
-    
-    	
+    <div class="container mt-5-mb-5! atyle="width:400px">
+    	<input type="date" id="picker" class="form-control">  
+    </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <script src="/socket.io/socket.io.min.js"></script>
     <script src="/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="moment.min.js"></script>
+    <script src="main.js"></script>
+    <script>
+        $('#picker').picker({
+            timePicker: true,
+            startDate: moment().startOf('hour'),
+            endDate: moment().startOf('hour').add(32, 'hour'),
+            locale: {
+            format: 'M/DD hh:mm A'
+         });  
+    
 </body>
 </html>
