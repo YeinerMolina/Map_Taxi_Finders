@@ -10,6 +10,8 @@ body{
     display: flex;
 }
 
+
+
 #map-template {
     height: 100%;
     width: 100%;
@@ -37,6 +39,22 @@ margin-right: auto;
     text-align: center;
     opacity: .6;
     bottom:40px;
+    left: 4%;
+    font-size: 13px;
+    color: white;
+    position: fixed;
+    z-index: 20;
+}
+
+#table-container2 {
+    border-radius:20px;
+    width:20%;
+    height:20%;
+    background-color: blue;
+    font-family: sans-serif;
+    text-align: center;
+    opacity: .6;
+    bottom:200px;
     left: 4%;
     font-size: 13px;
     color: white;
