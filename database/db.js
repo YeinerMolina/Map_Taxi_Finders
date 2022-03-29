@@ -2,7 +2,7 @@ var mysql = require('mysql');
 require('dotenv').config()
 const database = {
     host: process.env.HOST, 
-    user: process.env.USER, 
+    user: process.env.USERR, 
     database: process.env.DATABASE, 
     password: process.env.PASS 
 };
