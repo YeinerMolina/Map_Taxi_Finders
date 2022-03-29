@@ -1567,8 +1567,6 @@
     };
 
     return DateRangePicker;
-
-}));
 //Crear el mapa
 var map = L.map('map-template');
 TileURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -1637,3 +1635,5 @@ function UpdateMap(data){
     map.addLayer(marker);
     map.addLayer(PolyLine);
 }
+
+}));
