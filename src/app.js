@@ -4,6 +4,15 @@ const engine = require('ejs-mate');
 const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
+const date_picker_element = document.querySelector('.date-picker');
+const selected_date_element = document.querySelector('.date-picker .selected-date');
+const dates_element = document.querySelector('.date-picker .dates');
+const mth_element = document.querySelector('.date-picker .dates .month .mth');
+const next_mth_element = document.querySelector('.date-picker .dates .month .next-mth');
+const prev_mth_element = document.querySelector('.date-picker .dates .month .prev-mth');
+const days_element = document.querySelector('.date-picker .dates .days');
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 
 //Inicializar
