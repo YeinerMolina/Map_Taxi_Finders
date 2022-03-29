@@ -1,3 +1,48 @@
+body{
+    padding: 0;
+    margin: 0;
+    background: #333;
+}
+
+#container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+}
+
+#map-template {
+    height: 100%;
+    width: 100%;
+    top:0;
+    position:fixed;
+    display: flex;
+    z-index: 10;
+} 
+
+
+#table-LastPosition {
+
+margin-left: auto;
+margin-right: auto;
+
+}
+
+
+#table-container {
+    border-radius:20px;
+    width:20%;
+    height:20%;
+    background-color: blue;
+    font-family: sans-serif;
+    text-align: center;
+    opacity: .6;
+    bottom:40px;
+    left: 4%;
+    font-size: 13px;
+    color: white;
+    position: fixed;
+    z-index: 20;
+}
 .daterangepicker {
     position: absolute;
     color: inherit;
@@ -335,7 +380,7 @@
   }
   
   /*  Larger Screen Styling */
-  @media (min-width: 564px) {
+    (min-width: 564px) {
     .daterangepicker {
       width: auto;
     }
@@ -391,7 +436,7 @@
     }
   }
   
-  @media (min-width: 730px) {
+  (min-width: 730px) {
     .daterangepicker .ranges {
       width: auto;
     }
@@ -408,48 +453,3 @@
       clear: none !important;
     }
   }
-body{
-    padding: 0;
-    margin: 0;
-    background: #333;
-}
-
-#container {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-}
-
-#map-template {
-    height: 100%;
-    width: 100%;
-    top:0;
-    position:fixed;
-    display: flex;
-    z-index: 10;
-} 
-
-
-#table-LastPosition {
-
-margin-left: auto;
-margin-right: auto;
-
-}
-
-
-#table-container {
-    border-radius:20px;
-    width:20%;
-    height:20%;
-    background-color: blue;
-    font-family: sans-serif;
-    text-align: center;
-    opacity: .6;
-    bottom:40px;
-    left: 4%;
-    font-size: 13px;
-    color: white;
-    position: fixed;
-    z-index: 20;
-}
