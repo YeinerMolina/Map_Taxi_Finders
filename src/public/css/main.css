@@ -49,18 +49,18 @@ margin-right: auto;
 }
 #table-container2 {
     border-radius:40px;
-    width:40%;
-    height:40%;
+    width:20%;
+    height:20%;
     background-color: blue;
     font-family: sans-serif;
     text-align: center;
     opacity: .6;
-    bottom:84px;
-    left: 24%;
+    bottom:55px;
+    left: 55%;
     font-size: 13px;
     color: white;
     position: fixed;
-    z-index: 50;
+    z-index: 55;
 }
 
 .date-picker {
