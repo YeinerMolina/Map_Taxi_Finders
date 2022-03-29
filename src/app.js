@@ -4,7 +4,7 @@ const engine = require('ejs-mate');
 const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
-//intento
+
 
 //Inicializar
 const app = express();
