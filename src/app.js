@@ -6,7 +6,7 @@ const socketIO = require('socket.io');
 const http = require('http');
 
 
-//Inicializar
+//Inicializard
 const app = express();
 app.engine('ejs', engine);
 app.set('view engine', 'ejs')

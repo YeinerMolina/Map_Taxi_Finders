@@ -30,45 +30,29 @@
     </div>
 
 
+    <div id="HistoricsContainer">
+        <div>
+            <label for="Date"><b>Día de busqueda</b></label>
+            <input type="text" id="Date" class="form-control" /> 
+            <label for="Hour_I"><b>Rango de horas</b></label>
+            <input type="text" id="Hour" class="form-control">
+            <button id="Historicos" class="btn btn-primary m-2">Historicos</button>
+        </div>
+    
+    </div>
     <div id="container">
 
     <div id="map-template">
 
     </div>
-
-    <div id="table-container">
-                        
-        <table class="text" id="table-LastPosition">
-            <b>Última ubicación</b>
-            <tr>
-                <td>ID:</td><td id="id"> -- </td>
-            </tr>
-            <tr>
-                <td>Latitud:</td><td id="latitud"> -- </td>
-            </tr>
-            <tr>
-                <td>Longitud: </td><td id="longitud"> --</td>
-            </tr>
-            <tr>
-                <td>Fecha: </td><td id="fecha"> --
-            </td>
-            </tr>
-            <tr>
-                <td>Hora:</td><td id="hora"> -- </td> 
-            </tr>
-            </tr>
-        </table>
-    </div>
-                    
-                    
-                    
+                         
                     
     </div>
    
    
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <script src="/socket.io/socket.io.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/Historicos_Main.js"></script>
 
     <script src="/js/DateTimePicker.js"></script>
 

@@ -1,7 +1,8 @@
 module.exports = io => {
     io.on('connection',(socket) => {
 
-        var Historicos = false;
+        Historicos = false;
+
         console.log('New user connected');
         ActualizarDatos(socket);
 
@@ -9,8 +10,16 @@ module.exports = io => {
             ActualizarDatos(socket);
         })
 
+        socket.on('Client: HistoricsPage',()=>{
+            Historicos = true;
+        })
+
+        socket.on('Client: StartPage', () => {
+            Historicos = false;
+        })
+
         socket.on('Client: RequiredHistoricos',(TimeArray)=>{
-            Historicos = true; 
+            console.log(TimeArray)
             HistoricosFecha(socket,TimeArray)
         })
 
@@ -23,7 +32,6 @@ module.exports = io => {
             console.log(arg)
         })
 
-
         setInterval(() => {
         if (!Historicos) {
                 ActualizarDatos(socket);
@@ -31,6 +39,7 @@ module.exports = io => {
         }, 3000);
         
     })
+
 }
 
 function ActualizarDatos(socket){
