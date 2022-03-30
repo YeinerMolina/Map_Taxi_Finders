@@ -19,7 +19,6 @@ server.on('message',(msg,rinfo)=>{
             }
             else{
                 console.log('Data enviada: ' + Mensaje);
-                Broadcast();
             }
         })
 })
