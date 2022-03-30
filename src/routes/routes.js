@@ -12,13 +12,8 @@ router.get('/Historicos', (req,res) =>{
 })
 
 router.post('/github',(req,res)=>{
-    exec('git pull && sudo kill -9 $(sudo lsof -t -i:3000) && npm start')
+    exec('git reset --hard && git pull && npx pm2 restart App')
 
-})
-//sEl de la mitad obtiene una lista de los programas que ocupan el puerto 3000. 
-router.post('/github',(req,res)=>{
-    exec('git pull && sudo kill -9 $(sudo lsof -t -i:3000) && npm start')
-    
 })
 const connection = require('../../database/db.js');
 module.exports = router;
