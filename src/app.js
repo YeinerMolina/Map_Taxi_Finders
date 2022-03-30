@@ -6,12 +6,11 @@ const socketIO = require('socket.io');
 const http = require('http');
 
 
-//Inicializard
 const app = express();
 app.engine('ejs', engine);
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
-dotenv.config({path:'./env/.env'});
+dotenv.config();
 const server = http.createServer(app);
 const io = socketIO(server)
 
