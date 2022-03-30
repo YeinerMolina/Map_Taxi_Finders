@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { exec } = require('child_process');
 
 
-//Routess
+//Routes
 router.get('/', (req,res) =>{
     res.render('index');
 })
