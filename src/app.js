@@ -10,7 +10,7 @@ const app = express();
 app.engine('ejs', engine);
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
-dotenv.config();
+dotenv.config({path:'./env/.env'});
 const server = http.createServer(app);
 const io = socketIO(server)
 
