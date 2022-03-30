@@ -1,5 +1,7 @@
 <<<<<<< HEAD
+env
 .env
+Bases de datos.txt
 node_modules
 =======
 *.iml

@@ -6,7 +6,6 @@ const socketIO = require('socket.io');
 const http = require('http');
 
 
-//Inicializara
 const app = express();
 app.engine('ejs', engine);
 app.set('view engine', 'ejs')
@@ -19,7 +18,8 @@ const io = socketIO(server)
 //routes 
 app.use(require('./routes/routes.js'));
 
-
+//Socket
+require('./sockets.js')(io);
 
 //udpserver
 require('./UDP_Server');
