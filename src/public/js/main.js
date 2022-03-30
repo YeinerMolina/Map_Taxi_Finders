@@ -56,7 +56,7 @@ function UpdateMap(data){
         map.removeLayer(PolyLine);
     }
 
-    map.setView([Lat,Lon],11);
+    map.setView([Lat,Lon]);
     marker = L.marker([Lat,Lon]);
     PolyLine = L.polyline(PolyArray,{color:'red'})
     marker.bindPopup("Posición actual");
