@@ -33,6 +33,5 @@ server.listen(PORT, ()=>{
     console.log('Server on http://localhost:'+PORT);
 })
 
-console.log('Prueba actualizacion 1')
 
 const connection = require('../database/db');
