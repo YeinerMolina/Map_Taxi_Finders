@@ -55,7 +55,7 @@ function UpdateMap(data){
     if (typeof PolyLine !== 'undefined'){
         map.removeLayer(PolyLine);
     }
-
+    console.log('Funcion funcional')
     map.setView([Lat,Lon]);
     marker = L.marker([Lat,Lon]);
     PolyLine = L.polyline(PolyArray,{color:'red'})
