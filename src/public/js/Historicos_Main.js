@@ -29,17 +29,22 @@ HistoricsFormLocation = document.querySelector('#LocationButton')
 
 //Connection for historics required
 socket.on('Server: NewHistorics',(data)=>{
+    if (typeof PolylineGroup !== 'undefined'){
+        //Delete all polylines
+        PolylineGroup.removeFrom(map)
+    }
     if(data.length!==0){
         ActualizarHistoricos(data);
     }
 })
 socket.on('Server: NewHistoricsLocation',(data)=>{
-    console.log(data)
+    //Recives the new historics from location
     ActualizarHistoricosLocation(data);
 })
 
 
 HistoricsForm.addEventListener('click',()=>{
+    //Function to send the range of time for the historics query and send it to the web server
     InitialDate = document.getElementById('Date').value.split(' ');
     FinalDate = document.getElementById('Hour').value.split(' ');
     TimeIVar = InitialDate[1];
@@ -52,47 +57,57 @@ HistoricsForm.addEventListener('click',()=>{
 })
 
 HistoricsFormLocation.addEventListener('click',()=>{
+    //Function to send the center and the radious for the query of requiring historics of the location range
     point = 0;
     socket.emit("Client: RequiredHistoricosLocation", point);
 })
 
 
 function ActualizarHistoricos(data){
+    //Function to load the historics to the web page
+
+    PolylineGroup = L.layerGroup();//Group for the polylines
+
+    LastPosition = data.length-1;
+    center = [data[LastPosition].latitud,data[LastPosition].longitud];
     HistoricsArray = [];
-    center = [data[data.length-1].latitud,data[data.length-1].longitud];
-    if (typeof marker !== 'undefined'){
-        map.removeLayer(marker);
-    }else{
+    if (typeof marker == 'undefined'){ 
         map.setView(center,14);
+    }else{
+        map.setView(center);
     }
     if (typeof PolyLine !== 'undefined'){
-        map.removeLayer(PolyLine);
+        PolylineGroup.removeFrom(map) //Remove polylines group 
     }
     
-    data.forEach(data => {
+    data.forEach((data,idx,array) => {
+
         FechaAct = data.fecha;
         if(typeof FechaAnt !== 'undefined'){
-            if (FechaAct == FechaAnt){
-                console.log(FechaAct)
-                if (typeof PolyLine !== 'undefined'){
-                    map.removeLayer(PolyLine);
-                }
-                PolyLine = L.polyline(HistoricsArray,{color:'blue'})
-                map.addLayer(PolyLine);
-            }else{
+            if ((FechaAct !== FechaAnt)||(idx === array.length - 1)){
+                var color;
+                var r = Math.floor(Math.random() * 255);
+                var g = Math.floor(Math.random() * 255);
+                var b = Math.floor(Math.random() * 255);
+                color= "rgb("+r+" ,"+g+","+ b+")"; 
+
+                PolyLine = L.polyline(HistoricsArray,{ 
+                    color: color,
+                    weight: 5,
+                    smoothFactor: 1
+                })
+                PolylineGroup.addLayer(PolyLine);
                 HistoricsArray=[];
             }
         }
         HistoricsArray.push([data.latitud,data.longitud])
         FechaAnt = data.fecha;
     })
-    map.setView(center);
-    marker = L.marker(center);
-    marker.bindPopup("Última posición");
-    map.addLayer(marker);
+    PolylineGroup.addTo(map)
 }
 
 function ActualizarHistoricosLocation(data){
+    //function to add the polylines of the location moment
     if (typeof marker !== 'undefined'){
         
     }else{

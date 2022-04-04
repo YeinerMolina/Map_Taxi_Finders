@@ -19,7 +19,6 @@ module.exports = io => {
         })
 
         socket.on('Client: RequiredHistoricos',(TimeArray)=>{
-            console.log(TimeArray)
             HistoricosFecha(socket,TimeArray)
         })
 
