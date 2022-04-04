@@ -24,6 +24,7 @@ var MapIcon = L.Icon.extend({
 
 //id for historics button
 HistoricsForm = document.querySelector('#Historicos');
+HistoricsFormLocation = document.querySelector('#LocationButton')
 //Sockets for connection to the backend 
 
 //Connection for historics required
@@ -32,16 +33,27 @@ socket.on('Server: NewHistorics',(data)=>{
         ActualizarHistoricos(data);
     }
 })
+socket.on('Server: NewHistoricsLocation',(data)=>{
+    console.log(data)
+    ActualizarHistoricosLocation(data);
+})
 
 
 HistoricsForm.addEventListener('click',()=>{
-    DateVar = document.getElementById('Date').value;
-    TimeArray = document.getElementById('Hour').value.split(' - ');
-    TimeIVar = TimeArray[0];
-    TimeFVar = TimeArray[1];
+    InitialDate = document.getElementById('Date').value.split(' ');
+    FinalDate = document.getElementById('Hour').value.split(' ');
+    TimeIVar = InitialDate[1];
+    DateIvar = InitialDate[0];
+    TimeFVar = FinalDate[1];
+    DateFvar = FinalDate[0];
 
-    TimeArray = [{Date: DateVar, TimeI: TimeIVar, TimeF: TimeFVar}];
+    TimeArray = {DateI: DateIvar,DateF:DateFvar, TimeI: TimeIVar, TimeF: TimeFVar};
     socket.emit("Client: RequiredHistoricos", TimeArray);
+})
+
+HistoricsFormLocation.addEventListener('click',()=>{
+    point = 0;
+    socket.emit("Client: RequiredHistoricosLocation", point);
 })
 
 
@@ -58,14 +70,43 @@ function ActualizarHistoricos(data){
     }
     
     data.forEach(data => {
+        FechaAct = data.fecha;
+        if(typeof FechaAnt !== 'undefined'){
+            if (FechaAct == FechaAnt){
+                console.log(FechaAct)
+                if (typeof PolyLine !== 'undefined'){
+                    map.removeLayer(PolyLine);
+                }
+                PolyLine = L.polyline(HistoricsArray,{color:'blue'})
+                map.addLayer(PolyLine);
+            }else{
+                HistoricsArray=[];
+            }
+        }
         HistoricsArray.push([data.latitud,data.longitud])
+        FechaAnt = data.fecha;
     })
     map.setView(center);
     marker = L.marker(center);
-    PolyLine = L.polyline(HistoricsArray,{color:'blue'})
     marker.bindPopup("Última posición");
     map.addLayer(marker);
-    map.addLayer(PolyLine);
 }
 
-console.log('Prueba actualizacion 1.3')
+function ActualizarHistoricosLocation(data){
+    if (typeof marker !== 'undefined'){
+        
+    }else{
+        map.setView([data[data.length-1].latitud,data[data.length-1].longitud],14);
+    }
+    if (typeof PolyLine !== 'undefined'){
+        map.removeLayer(PolyLine);
+    }
+    data.forEach(data => {
+        center = [data.latitud,data.longitud];
+        marker = L.marker(center);
+        marker.bindPopup();
+        map.addLayer(marker);
+    })
+    map.setView([data[data.length-1].latitud,data[data.length-1].longitud]);
+
+}

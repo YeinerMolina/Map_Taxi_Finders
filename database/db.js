@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 const database = {
     host: process.env.HOST, 
-    user: process.env.USER, 
+    user: process.env.DBUSER, 
     database: process.env.DATABASE, 
     password: process.env.PASS 
 };
@@ -16,5 +16,5 @@ connection.connect((err) => {
         console.log("Connected to DB")
     }
 });
-//al
+
 module.exports = connection;
