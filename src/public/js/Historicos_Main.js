@@ -129,7 +129,7 @@ ConfirmLocationButton.addEventListener('click',()=>{
     RadioVar = document.getElementById('RadioForm').value;
     ContainerResult.style.display = 'none';
     ClearMap();
-    if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object && !isNaN(RadioVar)){
+    if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object && RadioVar!==''){
         lat = theMarker.getLatLng().lat;
         lon = theMarker.getLatLng().lng;
         if(circle !== 'undefined'){
@@ -138,6 +138,10 @@ ConfirmLocationButton.addEventListener('click',()=>{
         circle = L.circle([lat,lon],{radius: RadioVar}).addTo(map);
         LocationSearch.style.display = '';
         TableRows.innerHTML = ''
+    }else if(RadioVar==''){
+        alert('Ingrese un radio válido')
+    }else{
+        alert('Debe indicar el punto de busqueda en el mapa')
     }
 
 })
