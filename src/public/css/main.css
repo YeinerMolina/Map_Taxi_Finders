@@ -86,7 +86,7 @@ b {
 .menu{
     width: 3.2rem;
     height: 2rem;
-    background: #2EE3AD;
+    background-color: blue;
     border-radius: 0.5rem;
     position: absolute;
     top: 50%;
