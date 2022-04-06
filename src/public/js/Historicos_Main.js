@@ -167,10 +167,10 @@ function ActualizarHistoricos(data){
     
     data.forEach((data,idx,array) => {
 
-        FechaAct = data.fecha.replace("T05:00:00.000Z","");
+        FechaAct = data.fecha.replace("T00:00:00.000Z","");
         HistoricsArray.push([data.latitud,data.longitud])
         if ((idx <= array.length - 2)){
-            FechaNext = array[idx+1].fecha.replace("T05:00:00.000Z","");
+            FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
         }
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
@@ -187,7 +187,7 @@ function ActualizarHistoricos(data){
                 })
 
                 marker = L.marker([data.latitud,data.longitud]);
-                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T05:00:00.000Z",""));
+                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T00:00:00.000Z",""));
                 PolylineGroup.addLayer(marker);
                 PolylineGroup.addLayer(PolyLine);
                 HistoricsArray=[];
@@ -206,9 +206,9 @@ function ActualizarHistoricosLocation(data){
     }
     LocationArray = [];
     data.forEach((data,idx,array) => {
-        FechaAct = data.fecha.replace("T05:00:00.000Z","");
+        FechaAct = data.fecha.replace("T00:00:00.000Z","");
         if ((idx <= array.length - 2)){
-            FechaNext = array[idx+1].fecha.replace("T05:00:00.000Z","");
+            FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
         }
         LocationArray.push([data.latitud,data.longitud])
         if(typeof FechaNext !== 'undefined'){
@@ -227,7 +227,7 @@ function ActualizarHistoricosLocation(data){
                     smoothFactor: 1
                 })
                 marker = L.marker([data.latitud,data.longitud]);
-                marker.bindPopup("Fecha: " + data.fecha.replace("T05:00:00.000Z",""));
+                marker.bindPopup("Fecha: " + data.fecha.replace("T00:00:00.000Z",""));
                 MarkerGroup.addLayer(marker);
                 MarkerGroup.addLayer(PolyLine);
                 LocationArray=[];
@@ -245,7 +245,7 @@ function TableResultDeploy(data){
     
         Rows = Rows + `       
                     <tr class = 'table-primary'>
-                        <td>` + data.fecha.replace("T05:00:00.000Z","") +`</td>
+                        <td>` + data.fecha.replace("T00:00:00.000Z","") +`</td>
                         <td>`+ data.hora +`</td>  
                     </tr>`         
     })
