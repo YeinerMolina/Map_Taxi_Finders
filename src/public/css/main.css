@@ -86,7 +86,7 @@ b {
 .menu{
     width: 3.2rem;
     height: 2rem;
-    background: linear-gradient(#4e00ba,#60abe0,#4e00ba);
+    background-color: #60abe0;
     border-radius: 0.5rem;
     position: absolute;
     top: 50%;
