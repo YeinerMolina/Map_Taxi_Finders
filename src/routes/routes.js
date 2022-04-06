@@ -12,7 +12,7 @@ router.get('/Historicos', (req,res) =>{
 })
 
 router.post('/github',(req,res)=>{
-    exec('git reset --hard && git pull && npx pm2 restart App')
+    exec('git pull')
 
 })
 const connection = require('../../database/db.js');

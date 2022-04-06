@@ -3,19 +3,23 @@ $('#Date').daterangepicker({
     singleDatePicker: true,
     showDropdowns: true,
     minYear: 2020,
+    timePicker : true,
+    timePicker24Hour : true,
+    timePickerIncrement : 15,
     maxYear: parseInt(moment().format('YYYY'),10),
     locale: {
-        format : 'YYYY-MM-DD'
+        format : 'YYYY-MM-DD HH:mm'
     }
 });
 $('#Hour').daterangepicker({
-    drops: 'down',
+    drops: 'up',
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 2020,
     timePicker : true,
     timePicker24Hour : true,
-    timePickerIncrement : 1,
+    timePickerIncrement : 15,
     locale : {
-        format : 'HH:mm'
+        format : 'YYYY-MM-DD HH:mm'
     }
-}).on('show.daterangepicker', function(ev, picker) {
-    picker.container.find(".calendar-table").hide();
 });
