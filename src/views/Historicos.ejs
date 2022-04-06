@@ -33,17 +33,35 @@
     <div id="HistoricsContainer">
         <label><b>Indicar tipo de busqueda:</b></label>
         <div>
-            <button id="TimeButton" class="btn btn-primary m-2">Tiempo</button>
-            <button id="LocationButton" class="btn btn-primary m-2">Localización</button>
+            <button id="TimeButton" class="btn btn-primary m-2">Fecha</button>
+            <button id="LocationButton" class="btn btn-primary m-2">Ubicación</button>
         </div>
-        <div>
+        <div id="TimeForm" style="display: none">
             <label for="Date"><b>Fecha inicial</b></label>
             <input type="text" id="Date" class="form-control" /> 
             <label for="Hour_I"><b>Fecha final</b></label>
             <input type="text" id="Hour" class="form-control">
-            <button id="Historicos" class="btn btn-primary m-2">Buscar</button>
+            <button id="TimeSearch" class="btn btn-primary m-2">Buscar</button>
+        </div>
+        <div id="LocationForm" style="display: none">
+
+            <H5>Click en el mapa para definir área de busqueda</H5>
+            <div>
+                <label for="RadioForm"><H5>Radio de busqueda (m)</H5></label>
+                <input type="number" id="RadioForm" min="1" class="form-control">    
+            </div>
+            <button id="ConfirmSearch" class="btn btn-primary m-2">Confirmar</button>
+            <button id="LocationSearch" class="btn btn-primary m-2" style="display: none;">Buscar</button>
         </div>
     
+    </div>
+
+    <div id="TableContainer" style="display: none;">
+        <b>Resultados detallados</b>
+        <div id="tablediv">
+
+        </div>
+        
     </div>
     <div id="container">
 

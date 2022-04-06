@@ -22,8 +22,8 @@ module.exports = io => {
             HistoricosFecha(socket,TimeArray)
         })
 
-        socket.on('Client: RequiredHistoricosLocation',(Point)=>{
-            HistoricosUbicacion(socket,Point)
+        socket.on('Client: RequiredHistoricosLocation',(LocationArray)=>{
+            HistoricosUbicacion(socket,LocationArray)
         })
 
         socket.on('Client: RequiredRealTimeLocation',()=>{
@@ -74,9 +74,13 @@ function HistoricosFecha(socket,TimeArray){
     })
 }
 
-function HistoricosUbicacion(socket,Point){
-    Query = "SELECT latitud,longitud, (3959 * acos (cos ( radians(?) ) * cos( radians( latitud ) )* cos( radians( longitud ) - radians(?) )+ sin ( radians(?) )* sin( radians( latitud ) ))) AS distance FROM taxi.coordenadas HAVING distance < 0.1 ORDER BY distance;";
-    data = ['11.011617680039478','-74.83107309710955',11.011617680039478];
+function HistoricosUbicacion(socket,LocationArray){
+
+    lan = LocationArray.lat;
+    lng = LocationArray.lon;
+    Radio = LocationArray.radio;
+    Query = "SELECT hora,fecha,latitud,longitud, (6371 * acos (cos ( radians(?) ) * cos( radians( latitud ) )* cos( radians( longitud ) - radians(?) )+ sin ( radians(?) )* sin( radians( latitud ) ))) AS distance FROM taxi.coordenadas HAVING distance < ? ORDER BY DataNumber;";
+    data = [lan,lng,lan,Radio/1000];
     connection.query(Query,data, (error,data) => {
         if(error){
             console.log(error);
