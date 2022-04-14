@@ -313,7 +313,7 @@ function NewPolyline(PolylineArray){
 }
 
 function LocationDetails(data){
-    PopUP=L.popup().setContent("Fecha y hora: " + data[0].fecha.replace("T00:00:00.000Z","") + ' ' + data[0].hora).setLatLng([data[0].latitud,data[0].longitud]).openOn(map);
+    PopUP=L.popup().setContent("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora).setLatLng([data[0].latitud,data[0].longitud]).openOn(map);
 }
 
 function LocationMarker(data){
@@ -321,7 +321,7 @@ function LocationMarker(data){
         DateTimeLocationMarker.removeFrom(map)
     }
     DateTimeLocationMarker = L.marker([data[0].latitud,data[0].longitud]);
-    DateTimeLocationMarker.bindPopup("Fecha y hora: " + data[0].fecha.replace("T00:00:00.000Z","") + ' ' + data[0].hora);
+    DateTimeLocationMarker.bindPopup("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora);
     DateTimeLocationMarker.addTo(map)
 }
 
