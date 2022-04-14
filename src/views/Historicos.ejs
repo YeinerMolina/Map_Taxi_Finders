@@ -32,15 +32,22 @@
 
     <div id="HistoricsContainer">
         <label><b>Indicar tipo de búsqueda:</b></label>
-        <div>
-            <button id="TimeButton" class="btn btn-primary m-2">Fecha</button>
-            <button id="LocationButton" class="btn btn-primary m-2">Ubicación</button>
+        <div class= "row">
+            <div class="d-flex justify-content-end col-6">
+                <button id="TimeButton" class="btn btn-primary m-2">Fecha</button>
+            </div>
+            <div class = "justify-content-start">
+                <div class="location ">
+                    <button id="LocationButton" class="btn btn-primary m-2" disabled>Ubicación</button>
+                    <div id="LocationHover"class="message col-6"> Realice busqueda de tiempo para acceder a la busqueda por ubicación</div>
+                </div>
+            </div>
         </div>
         <div id="TimeForm" style="display: none">
-            <label for="Date"><b>Fecha inicial</b></label>
-            <input type="text" id="Date" class="form-control" /> 
-            <label for="Hour_I"><b>Fecha final</b></label>
-            <input type="text" id="Hour" class="form-control">
+            <label for="DateI"><b>Fecha inicial</b></label>
+            <input type="text" id="DateI" class="form-control" /> 
+            <label for="DateF"><b>Fecha final</b></label>
+            <input type="text" id="DateF" class="form-control">
             <button id="TimeSearch" class="btn btn-primary m-2">Buscar</button>
         </div>
         <div id="LocationForm" style="display: none">
@@ -57,9 +64,26 @@
     </div>
 
     <div id="TableContainer" style="display: none;">
-        <b>Resultados detallados</b>
+        <H2>Resultados detallados</H2>
+        <h6>Para resultados individuales de click sobre una línea o sobre una fila de la tabla</h6> 
         <div id="tablediv">
-
+            <div style="height: 200px;overflow-y: scroll; overflow:auto;">
+                <table class="table table-bordered table-striped mb-0">
+                    <thead>
+                    
+                        <tr class = 'table-primary'>
+                            <th scope="col">Fecha y Hora</th>
+                        </tr>
+                        
+                    </thead> 
+                    <tbody id="tbl-body-results">
+                        <div id = "Rowsdiv">
+                            <tr class = 'table-primary'>
+                            </tr>
+                        </div>
+                    </tbody>
+                </table>
+            </div>`
         </div>
         
     </div>

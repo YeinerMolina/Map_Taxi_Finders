@@ -1,12 +1,11 @@
-
-
 //Initialice the map
 var map = L.map('map-template');
 TileURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 L.tileLayer(TileURL).addTo(map);
-PolylineGroup = L.layerGroup();//Group for the polylines
-MarkerGroup = L.layerGroup();
+TimeLayerGroup = L.featureGroup();//Group for the polylines
+LocationLayerGroup = L.featureGroup();
 PolyArray = [];
+click = false;
 
 
 Lat = 10.994326;
@@ -19,14 +18,46 @@ const socket  = io();
 //Connetion to say to backend that open page is Historics page
 socket.emit('Client: HistoricsPage')
 
+LocationLayerGroup.on('click',(e)=>{
+    lat = e.latlng.lat;
+    lng = e.latlng.lng;
+    InitialDate = document.getElementById('DateI').value.split(' ');
+    FinalDate = document.getElementById('DateF').value.split(' ');
+
+    TimeIVar = InitialDate[1];
+    DateIvar = InitialDate[0];
+    TimeFVar = FinalDate[1];
+    DateFvar = FinalDate[0];
+
+    LocationArray = {lat: lat, lng: lng, DateI: DateIvar.concat(' ',TimeIVar), DateF: DateFvar+' '+TimeFVar}
+    socket.emit('Client: LocationDetailsRequest',LocationArray)
+})
+
+
+socket.on('Server: NewLatLngLocation',(data) =>{
+    LocationMarker(data)
+})
+
+socket.on('Server: LocationDetailsReply',(data)=>{
+    if(data.length!==0){
+        if(typeof MarkerLocationDetails !== 'undefined'){
+            PopUP.closeOn(map)
+        }
+        LocationDetails(data);
+    }
+})
+
 //Connection for historics required
 socket.on('Server: NewHistorics',(data)=>{
-    if (typeof PolylineGroup !== 'undefined'){
+    if (typeof TimeLayerGroup !== 'undefined'){
         //Delete all polylines
-        PolylineGroup.removeFrom(map)
+        TimeLayerGroup.removeFrom(map)
     }
     if(data.length!==0){
-        ActualizarHistoricos(data);
+        HoverMessage.style.display = 'none';
+        ActualizarHistoricosTime(data);
+        document.getElementById('LocationButton').disabled=false;
+        
     }else{
         alert('No se encontraron resultados');
     }
@@ -61,7 +92,7 @@ ConfirmLocationButton = document.querySelector('#ConfirmSearch');
 LocationForm = document.querySelector('#LocationForm');
 
 
-TableRows = document.getElementById('tablediv');
+TableRows = document.getElementById('Rowsdiv');
 
 //id for historics time button
 HistoricsFormTime = document.querySelector('#TimeButton');
@@ -75,24 +106,23 @@ LocationSearch = document.querySelector('#LocationSearch');
 //Searching button for time
 HistoricsForm = document.querySelector('#TimeSearch');
 
+//Hover message 
+HoverMessage = document.querySelector('#LocationHover');
+
+
 
 HistoricsForm.addEventListener('click',()=>{
     //Function to send the range of time for the historics query and send it to the web server
-    InitialDate = document.getElementById('Date').value.split(' ');
-    FinalDate = document.getElementById('Hour').value.split(' ');
+    InitialDate = document.getElementById('DateI').value.split(' ');
+    FinalDate = document.getElementById('DateF').value.split(' ');
 
-    if (new Date(InitialDate) < new Date(FinalDate)){
-        TimeIVar = InitialDate[1];
-        DateIvar = InitialDate[0];
-        TimeFVar = FinalDate[1];
-        DateFvar = FinalDate[0];
+    TimeIVar = InitialDate[1];
+    DateIvar = InitialDate[0];
+    TimeFVar = FinalDate[1];
+    DateFvar = FinalDate[0];
 
-        TimeArray = {DateI: DateIvar,DateF:DateFvar, TimeI: TimeIVar, TimeF: TimeFVar};
-        socket.emit("Client: RequiredHistoricos", TimeArray);
-    }else{
-        alert("La fecha final debe ser posterior a la fecha inicial")
-    }
-    
+    TimeArray = {DateI: DateIvar,DateF:DateFvar, TimeI: TimeIVar, TimeF: TimeFVar};
+    socket.emit("Client: RequiredHistoricos", TimeArray);    
 })
 
 HistoricsFormTime.addEventListener('click',()=>{
@@ -111,24 +141,36 @@ HistoricsFormLocation.addEventListener('click',()=>{
     HistoricsContainer.style.height = '42%';
     TimeForm.style.display = 'none';
     LocationForm.style.display = '';
-    ClearMap();
     click = true;
 })
 
 LocationSearch.addEventListener('click',()=>{
     //Function to send the center and the radious for the query of requiring historics of the location range
     if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object){
+        ClearMap();
+        InitialDate = document.getElementById('DateI').value.split(' ');
+        FinalDate = document.getElementById('DateF').value.split(' ');
+    
+        TimeIVar = InitialDate[1];
+        DateIvar = InitialDate[0];
+        TimeFVar = FinalDate[1];
+        DateFvar = FinalDate[0];
+
         LocationArray = {lat: theMarker.getLatLng().lat,
                         lon: theMarker.getLatLng().lng,
-                        radio: RadioVar}
+                        radio: RadioVar,
+                        DateI: DateIvar,
+                        DateF:DateFvar,
+                        TimeI: TimeIVar,
+                        TimeF: TimeFVar}
         socket.emit("Client: RequiredHistoricosLocation", LocationArray);
+
     }
 })
 
 ConfirmLocationButton.addEventListener('click',()=>{
     RadioVar = document.getElementById('RadioForm').value;
     ContainerResult.style.display = 'none';
-    ClearMap();
     if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object && RadioVar!==''){
         lat = theMarker.getLatLng().lat;
         lon = theMarker.getLatLng().lng;
@@ -146,13 +188,12 @@ ConfirmLocationButton.addEventListener('click',()=>{
 
 })
 
-
 function ClearMap(){
-    PolylineGroup.removeFrom(map);
-    MarkerGroup.removeFrom(map);
+    TimeLayerGroup.removeFrom(map);
+    LocationLayerGroup.removeFrom(map);
 }
 
-function ActualizarHistoricos(data){
+function ActualizarHistoricosTime(data){
     //Function to load the historics to the web page
 
     LastPosition = data.length-1;
@@ -164,111 +205,78 @@ function ActualizarHistoricos(data){
         map.setView(center);
     }
     if (typeof PolyLine !== 'undefined'){
-        PolylineGroup.clearLayers()
-        PolylineGroup.removeFrom(map) //Remove polylines group 
+        TimeLayerGroup.clearLayers()
+        TimeLayerGroup.removeFrom(map) //Remove polylines group 
 
     }
     
     data.forEach((data,idx,array) => {
 
-        FechaAct = data.fecha.replace("T00:00:00.000Z","");
+        FechaAct = data.fecha.replace("T05:00:00.000Z","");
         HistoricsArray.push([data.latitud,data.longitud])
         if ((idx <= array.length - 2)){
-            FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
+            FechaNext = array[idx+1].fecha.replace("T05:00:00.000Z","");
         }
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
-                var color;
-                var r = Math.floor(Math.random() * 255);
-                var g = Math.floor(Math.random() * 255);
-                var b = Math.floor(Math.random() * 255);
-                color= "rgb("+r+" ,"+g+","+ b+")"; 
 
-                PolyLine = L.polyline(HistoricsArray,{ 
-                    color: color,
-                    weight: 5,
-                    smoothFactor: 1
-                })
+                PolyLine = NewPolyline(HistoricsArray);
 
                 marker = L.marker([data.latitud,data.longitud]);
-                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T00:00:00.000Z",""));
-                PolylineGroup.addLayer(marker);
-                PolylineGroup.addLayer(PolyLine);
+                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T05:00:00.000Z",""));
+                TimeLayerGroup.addLayer(marker);
+                TimeLayerGroup.addLayer(PolyLine);
                 HistoricsArray=[];
             }
         }
     })
-    PolylineGroup.addTo(map)
+    TimeLayerGroup.addTo(map)
 }
 
 function ActualizarHistoricosLocation(data){
     //function to add the polylines of the location moment
     
-    if (typeof MarkerGroup !== 'undefined'){
-        MarkerGroup.clearLayers()
-        MarkerGroup.removeFrom(map);
+    if (typeof LocationLayerGroup !== 'undefined'){
+        LocationLayerGroup.clearLayers()
+        LocationLayerGroup.removeFrom(map);
     }
     LocationArray = [];
     data.forEach((data,idx,array) => {
-        FechaAct = data.fecha.replace("T00:00:00.000Z","");
+        FechaAct = data.fecha.replace("T05:00:00.000Z","");
         if ((idx <= array.length - 2)){
-            FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
+            FechaNext = array[idx+1].fecha.replace("T05:00:00.000Z","");
+            DataNumberNext = array[idx+1].DataNumber;
         }
         LocationArray.push([data.latitud,data.longitud])
         if(typeof FechaNext !== 'undefined'){
-            if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
+            if ((FechaAct !== FechaNext)||(idx === array.length - 1)||((data.DataNumber + 1) !== DataNumberNext)){
                 
-                
-                var color;
-                var r = Math.floor(Math.random() * 255);
-                var g = Math.floor(Math.random() * 255);
-                var b = Math.floor(Math.random() * 255);
-                color= "rgb("+r+" ,"+g+","+ b+")"; 
-
-                PolyLine = L.polyline(LocationArray,{ 
-                    color: color,
-                    weight: 5,
-                    smoothFactor: 1
-                })
-                marker = L.marker([data.latitud,data.longitud]);
-                marker.bindPopup("Fecha: " + data.fecha.replace("T00:00:00.000Z",""));
-                MarkerGroup.addLayer(marker);
-                MarkerGroup.addLayer(PolyLine);
+                PolyLine = NewPolyline(LocationArray);
+                LocationLayerGroup.addLayer(PolyLine);
                 LocationArray=[];
             }
         }        
     })
-    MarkerGroup.addTo(map);
+    LocationLayerGroup.addTo(map);
     TableResultDeploy(data);
 }
 
 function TableResultDeploy(data){
-    TableRows.innerHTML = '';
-    Rows = '';
-    data.forEach(data=>{ 
-    
-        Rows = Rows + `       
-                    <tr class = 'table-primary'>
-                        <td>` + data.fecha.replace("T00:00:00.000Z","") +`</td>
-                        <td>`+ data.hora +`</td>  
-                    </tr>`         
+    $('#tbl-body-results').empty();
+    Row = '';
+    data.forEach((data,idx,array) => {
+        FechaAct = data.TimeStamp;
+        if ((idx <= array.length - 2)){
+            FechaNext = array[idx+1].TimeStamp;
+        }
+        if (FechaAct!==FechaNext){
+            Row  =  "<tr class = 'table-primary' ><td>" + data.fecha.replace("T05:00:00.000Z","") + ' ' + data.hora + "</td></tr>"
+            $('#tbl-body-results').append(Row);
+        }
     })
-    TableRows.innerHTML = `
-        <div style="height: 200px;overflow-y: scroll; overflow:auto;">
-            <table class="table table-bordered table-striped mb-0">
-                <thead>
-                
-                    <tr class = 'table-primary'>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Hora</th>
-                    </tr>
-                    
-                </thead> 
-                <tbody>` + Rows + 
-             `</tbody>
-            </table>
-        </div>`
-    }
+    
+}
+
 
 var theMarker = {};
 var circle = {};
@@ -286,4 +294,39 @@ var circle = {};
         //Add a marker to show where you clicked.
         theMarker = L.marker([lat,lon]).addTo(map);
      }
+})
+
+function NewPolyline(PolylineArray){
+    var color;
+    var r = Math.floor(Math.random() * 200);
+    var g = Math.floor(Math.random() * 200);
+    var b = Math.floor(Math.random() * 200);
+    color= "rgb("+r+" ,"+g+","+ b+")"; 
+
+    PolyLine = L.polyline(PolylineArray,{ 
+        color: color,
+        weight: 5,
+        smoothFactor: 1
+    })
+
+    return PolyLine
+}
+
+function LocationDetails(data){
+    PopUP=L.popup().setContent("Fecha y hora: " + data[0].fecha.replace("T05:00:00.000Z","") + ' ' + data[0].hora).setLatLng([data[0].latitud,data[0].longitud]).openOn(map);
+}
+
+function LocationMarker(data){
+    if (typeof DateTimeLocationMarker !== 'undefined'){
+        DateTimeLocationMarker.removeFrom(map)
+    }
+    DateTimeLocationMarker = L.marker([data[0].latitud,data[0].longitud]);
+    DateTimeLocationMarker.bindPopup("Fecha y hora: " + data[0].fecha.replace("T05:00:00.000Z","") + ' ' + data[0].hora);
+    DateTimeLocationMarker.addTo(map)
+}
+
+$(document).on('click','#tbl-body-results','tr',(e)=>{
+    RowSelected = (String($(e.target).get(0).outerHTML));
+    TimeStamp = RowSelected.replace("<td>",'').replace("</td>",'');
+    socket.emit('Client: TimeStampLocationDetails', TimeStamp)
 })
