@@ -150,8 +150,7 @@ b {
 
 .title {
     grid-row: 1/2;
-    font-size: 3rem;
-    color: #FFF;
+    text-decoration: none;
     align-items: center;
     text-align: center;
 }
