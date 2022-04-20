@@ -136,13 +136,22 @@ b {
     position: absolute;
     top: 0;
     left: -30%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
     transition: left 0.7s;
     z-index: 30;
 }
 
+.options{
+    grid-row: 2/5;
+    text-align: center;
+    top: 50%;
+}
+.title {
+    grid-row: 1/2;
+    text-decoration: none;
+    align-items: center;
+    text-align: center;
+}
 .checkbox:checked ~ .left-panel{
     left: 0;
 }
@@ -157,7 +166,8 @@ ul a {
 li {
     list-style: none;
     font-size: 2rem;
-    text-align: center;
+    text-align: left;
+    align-items: center;
     padding: 0 0.5rem;
     margin: 1rem 0;
 }
