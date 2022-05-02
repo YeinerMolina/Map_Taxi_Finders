@@ -12,7 +12,7 @@ console.log("UDP Server on");
 server.on('message',(msg,rinfo)=>{
         const Mensaje = msg.toString().split(', ')
         QueryInsert = `INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud,hora) value ?`;
-        value = [[1,Mensaje[2],parseFloat(Mensaje[0]),parseFloat(Mensaje[1]),Mensaje[3]]];
+        value = [[Mensaje[4],Mensaje[2],parseFloat(Mensaje[0]),parseFloat(Mensaje[1]),Mensaje[3]]];
         connection.query(QueryInsert,[value], (error,data) =>{
             if(error){
                 console.log(error); 
