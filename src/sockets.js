@@ -4,10 +4,11 @@ module.exports = io => {
         Historicos = false;
 
         console.log('New user connected');
-        ActualizarDatos(socket);
+        ActualizarDatos(socket,1);
+        ActualizarDatos(socket,2);
 
         socket.on('Server: NewData',()=>{
-            ActualizarDatos(socket);
+            ActualizarDatos(socket,1);
         })
 
         socket.on('Client: TimeStampLocationDetails',(TimeStamp)=>{
@@ -45,7 +46,8 @@ module.exports = io => {
 
         setInterval(() => {
         if (!Historicos) {
-                ActualizarDatos(socket);
+                ActualizarDatos(socket,1);
+                ActualizarDatos(socket,2);
             }    
         }, 3000);
         
@@ -53,8 +55,8 @@ module.exports = io => {
 
 }
 
-function ActualizarDatos(socket){
-    Query = "SELECT * FROM taxi.coordenadas ORDER BY DataNumber DESC LIMIT 1";
+function ActualizarDatos(socket,ID){
+    Query = "SELECT * FROM taxi.coordenadas WHERE ID="+ ID + " ORDER BY DataNumber DESC LIMIT 1";
     connection.query(Query, (error,data)=>{
         if(error){
             console.log(error);

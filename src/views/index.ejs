@@ -18,52 +18,39 @@
    
 </head>
 <body>
-    <div name="lateral bar">
-        <input type="checkbox" class="checkbox" id="check">
-        <label class="menu" for="check">Menú</label>
-        <div class="left-panel">
-            <div class="title">
-                <a href="/">
-                    <img src="images/LogoWebPage.png" alt="LogoWebPage" style="width:30%; height: 50%;">
-                    <img src="images/Finders.png" alt="Finders" style="width: 50%; height: 30%;">
-                </a>
-            </div> 
-            <div class="options">
-                <ul>
-                    <div class="row">
-                        <div class="col-3">
-                            <img src="images/home.png" href="/" alt="home" style="width:70%; height: 70%;">
-                        </div>
-                        <div class="col-9">
-                            <a href="/"><li>Inicio: Tiempo real</li></a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <img src="images/record.png" href="/Historicos" alt="records" style="width:70%; height: 70%;">
-                        </div>
-                        <div class="col-9">
-                            <a href="/Historicos"><li>Historial</li></a>
-                        </div>
-                    </div>
-
-                </ul>
-            </div>
-
-        </div>
-    </div>
-
-
     <div id="container">
+
+    <div id="nav-var">
+        <div id="logo">
+            <a href="/">
+                <img src="images/LogoWebPage.png" alt="LogoWebPage" id="LogoWebPage">
+                <img src="images/Finders.png" alt="Finders" id="FindersLogo">
+            </a>
+        </div>
+        <div id="opciones">
+            <ul>
+                <a href="/Historicos">Historial</a>
+            </ul>
+            <div id="TaxiList">
+                <form>
+                    <label for="TaxiList">Seleccione taxi: </label>
+                    <select name="TaxiList" id="Taxi" style="font-size: 20px;">
+                        <option>Taxi 1</option>
+                        <option>Taxi 2</option>
+                        <option>Todos</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div> 
 
     <div id="map-template">
 
     </div>
 
-    <div id="table-container">
-                        
+    <div id="LastPositiontable-container">   
+        <b>Última ubicación <br></b>        
         <table class="text" id="table-LastPosition">
-            <b>Última ubicación</b>
             <tr>
                 <td>ID:</td><td id="id"> -- </td>
             </tr>
@@ -79,6 +66,9 @@
             </tr>
             <tr>
                 <td>Hora:</td><td id="hora"> -- </td> 
+            </tr>
+            <tr>
+                <td>Velocidad:</td><td id="Velocidad"> -- </td> 
             </tr>
             </tr>
         </table>
