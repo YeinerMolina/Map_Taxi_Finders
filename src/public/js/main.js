@@ -12,6 +12,7 @@ longitud = document.getElementById('longitud')
 fecha = document.getElementById('fecha')
 hora = document.getElementById('hora')  
 TaxiDefiner = document.getElementById('Taxi');
+Velocidad = document.getElementById('Velocidad')
 
 //Sockets for connection to the backend 
 const socket  = io();
@@ -66,6 +67,7 @@ function Actualizar(data){
     longitud.innerHTML = data.longitud
     fecha.innerHTML = data.fecha.replace("T00:00:00.000Z","")
     hora.innerHTML = data.hora
+    Velocidad.innerHTML = data.Velocidad;
 }
 
 
