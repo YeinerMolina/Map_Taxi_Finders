@@ -19,7 +19,7 @@ server.on('message',(msg,rinfo)=>{
         Latitud = Mensaje[0];
         
         QueryInsert = `INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud,hora,Velocidad) value ?`;
-        value = [[ID,fecja,parseFloat(Latitud),parseFloat(longitud),hora,Velocidad]];
+        value = [[ID,fecha,parseFloat(Latitud),parseFloat(Longitud),hora,Velocidad]];
         connection.query(QueryInsert,[value], (error,data) =>{
             if(error){
                 console.log(error); 
