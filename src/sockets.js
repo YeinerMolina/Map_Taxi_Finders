@@ -85,7 +85,7 @@ function ActualizarDatos(socket,ID){
 }
 
 function HistoricosFecha(socket,TimeArray){
-    Query = "select *, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp from coordenadas HAVING TimeStamp>=? AND TimeStamp<=?";
+    Query = "select *, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp from coordenadas HAVING TimeStamp>=? AND TimeStamp<=? ORDER BY ID,DataNumber";
     const InitialDate = TimeArray.DateI;
     const InitialTime = TimeArray.TimeI;
     const EndDate = TimeArray.DateF;
