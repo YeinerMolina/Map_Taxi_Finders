@@ -111,7 +111,7 @@ function HistoricosUbicacion(socket,LocationArray){
     const EndDate = LocationArray.DateF;
     const EndTime = LocationArray.TimeF;
     data = [InitialDate + ' ' + InitialTime, EndDate +' '+ EndTime];
-    Query = "SELECT *, (6371 * acos (cos ( radians(?) ) * cos( radians( latitud ) )* cos( radians( longitud ) - radians(?) )+ sin ( radians(?) )* sin( radians( latitud ) ))) AS distance, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp FROM taxi.coordenadas HAVING distance < ? AND TimeStamp>=? AND TimeStamp<=? ORDER BY DataNumber;";
+    Query = "SELECT *, (6371 * acos (cos ( radians(?) ) * cos( radians( latitud ) )* cos( radians( longitud ) - radians(?) )+ sin ( radians(?) )* sin( radians( latitud ) ))) AS distance, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp FROM taxi.coordenadas HAVING distance < ? AND TimeStamp>=? AND TimeStamp<=? ORDER BY ID, DataNumber;";
     data = [lan,lng,lan,Radio/1000, InitialDate + ' ' + InitialTime, EndDate +' '+ EndTime];
     connection.query(Query,data, (error,data) => {
         if(error){
@@ -147,6 +147,7 @@ function LocationTimeDetails(socket,TimeStamp){
             console.log(error);
         }else{
             socket.emit('Server: NewLatLngLocation',data)
+            console.log(data)
         }
     })
 }
