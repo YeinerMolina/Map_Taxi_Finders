@@ -2,6 +2,7 @@ module.exports = io => {
     io.on('connection',(socket) => {
 
         Historicos = false;
+        Taxi = 1;
 
         console.log('New user connected');
         ActualizarDatos(socket,1);
@@ -9,6 +10,16 @@ module.exports = io => {
 
         socket.on('Server: NewData',()=>{
             ActualizarDatos(socket,1);
+        })
+
+        socket.on('Client: TaxiSelected',(ID)=>{
+            Taxi = ID;
+            if(ID == 1 || ID == 2){
+                ActualizarDatos(socket,ID);
+            }else{
+                ActualizarDatos(socket,1);
+                ActualizarDatos(socket,2);
+            }
         })
 
         socket.on('Client: TimeStampLocationDetails',(TimeStamp)=>{
@@ -37,7 +48,7 @@ module.exports = io => {
 
         socket.on('Client: RequiredRealTimeLocation',()=>{
             Historicos = false 
-            ActualizarDatos(socket);
+            ActualizarDatos(socket,1);
         })
 
         socket.on('Hello',(arg)=>{
@@ -46,8 +57,14 @@ module.exports = io => {
 
         setInterval(() => {
         if (!Historicos) {
-                ActualizarDatos(socket,1);
-                ActualizarDatos(socket,2);
+                if (Taxi == 1){
+                    ActualizarDatos(socket,1);
+                }else if(Taxi == 2){
+                    ActualizarDatos(socket,2);
+                }else {
+                    ActualizarDatos(socket,1);
+                    ActualizarDatos(socket,2);
+                }
             }    
         }, 3000);
         
@@ -68,7 +85,7 @@ function ActualizarDatos(socket,ID){
 }
 
 function HistoricosFecha(socket,TimeArray){
-    Query = "select *, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp from coordenadas HAVING TimeStamp>=? AND TimeStamp<=?";
+    Query = "select *, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp from coordenadas HAVING TimeStamp>=? AND TimeStamp<=? ORDER BY ID,DataNumber";
     const InitialDate = TimeArray.DateI;
     const InitialTime = TimeArray.TimeI;
     const EndDate = TimeArray.DateF;
@@ -94,7 +111,7 @@ function HistoricosUbicacion(socket,LocationArray){
     const EndDate = LocationArray.DateF;
     const EndTime = LocationArray.TimeF;
     data = [InitialDate + ' ' + InitialTime, EndDate +' '+ EndTime];
-    Query = "SELECT *, (6371 * acos (cos ( radians(?) ) * cos( radians( latitud ) )* cos( radians( longitud ) - radians(?) )+ sin ( radians(?) )* sin( radians( latitud ) ))) AS distance, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp FROM taxi.coordenadas HAVING distance < ? AND TimeStamp>=? AND TimeStamp<=? ORDER BY DataNumber;";
+    Query = "SELECT *, (6371 * acos (cos ( radians(?) ) * cos( radians( latitud ) )* cos( radians( longitud ) - radians(?) )+ sin ( radians(?) )* sin( radians( latitud ) ))) AS distance, cast(concat(fecha, ' ', hora) as datetime) as TimeStamp FROM taxi.coordenadas HAVING distance < ? AND TimeStamp>=? AND TimeStamp<=? ORDER BY ID, DataNumber;";
     data = [lan,lng,lan,Radio/1000, InitialDate + ' ' + InitialTime, EndDate +' '+ EndTime];
     connection.query(Query,data, (error,data) => {
         if(error){

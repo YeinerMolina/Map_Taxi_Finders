@@ -2,10 +2,17 @@
 var map = L.map('map-template');
 TileURL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 L.tileLayer(TileURL).addTo(map);
-TimeLayerGroup = L.featureGroup();//Group for the polylines
+TimeLayerGroup1 = L.featureGroup();//Group for the polylines
+TimeLayerGroup2 = L.featureGroup();//Group for the polylines
 LocationLayerGroup = L.featureGroup();
+LocationLayerGroup2 = L.featureGroup();
 PolyArray = [];
+DataTaxi1 = [];
+DataTaxi2 = [];
+DataTaxiT = [];
 click = false;
+
+Cargando = document.getElementById('CargaContainer');
 
 
 Lat = 10.994326;
@@ -19,6 +26,21 @@ const socket  = io();
 socket.emit('Client: HistoricsPage')
 
 LocationLayerGroup.on('click',(e)=>{
+    lat = e.latlng.lat;
+    lng = e.latlng.lng;
+    InitialDate = document.getElementById('DateI').value.split(' ');
+    FinalDate = document.getElementById('DateF').value.split(' ');
+
+    TimeIVar = InitialDate[1];
+    DateIvar = InitialDate[0];
+    TimeFVar = FinalDate[1];
+    DateFvar = FinalDate[0];
+
+    LocationArray = {lat: lat, lng: lng, DateI: DateIvar.concat(' ',TimeIVar), DateF: DateFvar+' '+TimeFVar}
+    socket.emit('Client: LocationDetailsRequest',LocationArray)
+})
+
+LocationLayerGroup2.on('click',(e)=>{
     lat = e.latlng.lat;
     lng = e.latlng.lng;
     InitialDate = document.getElementById('DateI').value.split(' ');
@@ -54,28 +76,29 @@ socket.on('Server: NewHistorics',(data)=>{
         TimeLayerGroup.removeFrom(map)
     }
     if(data.length!==0){
-        HoverMessage.style.display = 'none';
-        ActualizarHistoricosTime(data);
-        document.getElementById('LocationButton').disabled=false;
-        
+        ActualizarHistoricosTime(data);       
     }else{
         alert('No se encontraron resultados');
     }
+
+    Cargando.style.display = 'none';
 })
 
 socket.on('Server: NewHistoricsLocation',(data)=>{
     //Recives the new historics from location
+    Cargando.style.display = 'none';
     if(data.length !== 0){
         ActualizarHistoricosLocation(data);
         ContainerResult.style.display = '';
     }else{
         alert('No se encontraron resultados');
     }
-    
 })
 
 
 //--------------------id from documents-------------------------
+
+TaxiDefiner = document.getElementById('Taxi');
 
 //id for form container
 ContainerForm = document.querySelector('#HistoricsContainer')
@@ -106,10 +129,59 @@ LocationSearch = document.querySelector('#LocationSearch');
 //Searching button for time
 HistoricsForm = document.querySelector('#TimeSearch');
 
-//Hover message 
-HoverMessage = document.querySelector('#LocationHover');
 
 
+
+TaxiDefiner.addEventListener('change',(event)=>{
+
+    Seleccionado = event.target.value;
+
+        if(LocationLayerGroup != 'undefined'){
+            LocationLayerGroup.removeFrom(map)
+        }
+        if(LocationLayerGroup2 != 'undefined'){
+            LocationLayerGroup2.removeFrom(map)
+        }
+        if(TimeLayerGroup1 != 'undefined'){
+            TimeLayerGroup1.removeFrom(map)
+        }
+        if(TimeLayerGroup2 != 'undefined'){
+            TimeLayerGroup2.removeFrom(map)
+        }
+    
+        if (Seleccionado == 'Taxi 1'){
+    
+            TimeLayerGroup1.addTo(map)
+            LocationLayerGroup.addTo(map)
+            if(DataTaxi1 !== 'undefined' && DataTaxi1.length > 0){
+                TableResultDeploy(DataTaxi1);
+            }
+            
+    
+        }else if (Seleccionado == 'Taxi 2'){
+    
+            if(DataTaxi2 !== 'undefined' && DataTaxi2.length > 0){
+                TableResultDeploy(DataTaxi2);
+            }
+            TimeLayerGroup2.addTo(map)
+            LocationLayerGroup2.addTo(map)
+    
+        }else{
+            TimeLayerGroup1.addTo(map)
+            TimeLayerGroup2.addTo(map)
+            LocationLayerGroup.addTo(map)
+            LocationLayerGroup2.addTo(map)
+
+            DataTaxiT = DataTaxi1;
+            DataTaxiT = DataTaxiT.concat(DataTaxi2)
+            if(DataTaxiT !== 'undefined' && DataTaxiT.length > 0){
+                TableResultDeploy(DataTaxiT);
+            }
+            console.log(DataTaxiT)
+
+        }
+    
+})
 
 HistoricsForm.addEventListener('click',()=>{
     //Function to send the range of time for the historics query and send it to the web server
@@ -121,8 +193,12 @@ HistoricsForm.addEventListener('click',()=>{
     TimeFVar = FinalDate[1];
     DateFvar = FinalDate[0];
 
+    document.getElementById('LocationButton').style.display = '';
+
     TimeArray = {DateI: DateIvar,DateF:DateFvar, TimeI: TimeIVar, TimeF: TimeFVar};
-    socket.emit("Client: RequiredHistoricos", TimeArray);    
+    socket.emit("Client: RequiredHistoricos", TimeArray,1); 
+    
+    Cargando.style.display = '';
 })
 
 HistoricsFormTime.addEventListener('click',()=>{
@@ -164,7 +240,7 @@ LocationSearch.addEventListener('click',()=>{
                         TimeI: TimeIVar,
                         TimeF: TimeFVar}
         socket.emit("Client: RequiredHistoricosLocation", LocationArray);
-
+        Cargando.style.display = '';
     }
 })
 
@@ -189,48 +265,88 @@ ConfirmLocationButton.addEventListener('click',()=>{
 })
 
 function ClearMap(){
-    TimeLayerGroup.removeFrom(map);
+    LocationLayerGroup.clearLayers()
+    LocationLayerGroup2.clearLayers()
+    TimeLayerGroup1.clearLayers()
+    TimeLayerGroup2.clearLayers()
+    TimeLayerGroup1.removeFrom(map);
+    TimeLayerGroup2.removeFrom(map);
     LocationLayerGroup.removeFrom(map);
+    LocationLayerGroup2.removeFrom(map);
+    ContainerResult.style.display='none';
 }
 
-function ActualizarHistoricosTime(data){
+function ActualizarHistoricosTime(data){    
     //Function to load the historics to the web page
 
     LastPosition = data.length-1;
-    center = [data[LastPosition].latitud,data[LastPosition].longitud];
-    HistoricsArray = [];
-    if (typeof marker == 'undefined'){ 
-        map.setView(center,14);
-    }else{
-        map.setView(center);
+    HistoricsArray1 = [];
+    HistoricsArray2 = [];
+    if (typeof TimeLayerGroup1 !== 'undefined'){
+        TimeLayerGroup1.clearLayers()
+        TimeLayerGroup1.removeFrom(map) //Remove polylines group 
     }
-    if (typeof PolyLine !== 'undefined'){
-        TimeLayerGroup.clearLayers()
-        TimeLayerGroup.removeFrom(map) //Remove polylines group 
-
+    if (typeof TimeLayerGroup2 !== 'undefined'){
+        TimeLayerGroup2.clearLayers()
+        TimeLayerGroup2.removeFrom(map) //Remove polylines group 
     }
     
     data.forEach((data,idx,array) => {
 
         FechaAct = data.fecha.replace("T00:00:00.000Z","");
-        HistoricsArray.push([data.latitud,data.longitud])
+        if(data.ID==1){
+            HistoricsArray1.push([data.latitud,data.longitud])
+        }else{
+            HistoricsArray2.push([data.latitud,data.longitud])
+        }
+        
         if ((idx <= array.length - 2)){
             FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
         }
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
 
-                PolyLine = NewPolyline(HistoricsArray);
-
                 marker = L.marker([data.latitud,data.longitud]);
-                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T00:00:00.000Z",""));
-                TimeLayerGroup.addLayer(marker);
-                TimeLayerGroup.addLayer(PolyLine);
-                HistoricsArray=[];
+                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T00:00:00.000Z","") + "<br> Taxi " + data.ID);
+
+                if(data.ID==1){
+                    PolyLine1 = NewPolyline(HistoricsArray1);
+                    TimeLayerGroup1.addLayer(marker);
+                    TimeLayerGroup1.addLayer(PolyLine);
+                    if(TaxiDefiner.value=='Taxi 1' || TaxiDefiner.value=='Todos'){
+                        center = [data.latitud,data.longitud];
+                    }
+                }else{
+                    if(TaxiDefiner.value=='Taxi 2' || TaxiDefiner.value=='Todos'){
+                        center = [data.latitud,data.longitud];
+                    }
+                    PolyLine2 = NewPolyline(HistoricsArray2);
+                    TimeLayerGroup2.addLayer(marker);
+                    TimeLayerGroup2.addLayer(PolyLine2);
+                }
+
+
+
+                if (typeof marker == 'undefined'){ 
+                    map.setView(center,14);
+                }else{
+                    map.setView(center);
+                }
+
+
+                HistoricsArray1=[];
+                HistoricsArray2=[];
             }
         }
     })
-    TimeLayerGroup.addTo(map)
+    if(TaxiDefiner.value=='Taxi 1'){
+        TimeLayerGroup1.addTo(map)            
+    }else if(TaxiDefiner.value == 'Taxi 2'){
+        TimeLayerGroup2.addTo(map)
+    }else{
+        TimeLayerGroup1.addTo(map)
+        TimeLayerGroup2.addTo(map)
+    }
 }
 
 function ActualizarHistoricosLocation(data){
@@ -240,25 +356,60 @@ function ActualizarHistoricosLocation(data){
         LocationLayerGroup.clearLayers()
         LocationLayerGroup.removeFrom(map);
     }
+    if (typeof LocationLayerGroup2 !== 'undefined'){
+        LocationLayerGroup2.clearLayers()
+        LocationLayerGroup2.removeFrom(map);
+    }
+    
     LocationArray = [];
+    LocationArray2 = [];
+    DataTaxi1 = [];
+    DataTaxi2 = [];
     data.forEach((data,idx,array) => {
         FechaAct = data.fecha.replace("T00:00:00.000Z","");
         if ((idx <= array.length - 2)){
             FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
             DataNumberNext = array[idx+1].DataNumber;
         }
-        LocationArray.push([data.latitud,data.longitud])
+        if(data.ID==1){
+            LocationArray.push([data.latitud,data.longitud])
+            DataTaxi1.push(data)
+        }else{
+            LocationArray2.push([data.latitud,data.longitud])
+            DataTaxi2.push(data)
+        }
+        
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)||((data.DataNumber + 1) !== DataNumberNext)){
                 
-                PolyLine = NewPolyline(LocationArray);
-                LocationLayerGroup.addLayer(PolyLine);
+                if(data.ID==1){
+                    PolyLine1 = NewPolyline(LocationArray);
+                    LocationLayerGroup.addLayer(PolyLine1);
+                }else{
+                    PolyLine2 = NewPolyline(LocationArray2);
+                    LocationLayerGroup2.addLayer(PolyLine2);
+                }
                 LocationArray=[];
+                LocationArray2=[];
+
             }
         }        
     })
-    LocationLayerGroup.addTo(map);
-    TableResultDeploy(data);
+    if(TaxiDefiner.value=='Taxi 1'){
+        LocationLayerGroup.addTo(map)
+        TableResultDeploy(DataTaxi1);
+    }else if(TaxiDefiner.value == 'Taxi 2'){
+        LocationLayerGroup2.addTo(map);
+        TableResultDeploy(DataTaxi2);
+    }else{
+        LocationLayerGroup.addTo(map)
+        LocationLayerGroup2.addTo(map);
+        DataTaxiT = DataTaxi1;
+        DataTaxiT = DataTaxiT.concat(DataTaxi2)
+        console.log(DataTaxiT)
+        TableResultDeploy(DataTaxiT);
+    }    
+    
 }
 
 function TableResultDeploy(data){
@@ -281,7 +432,7 @@ function TableResultDeploy(data){
 var theMarker = {};
 var circle = {};
 
- map.on('click',function(e){
+map.on('click',function(e){
      if(click){
         lat = e.latlng.lat;
         lon = e.latlng.lng;
@@ -313,7 +464,7 @@ function NewPolyline(PolylineArray){
 }
 
 function LocationDetails(data){
-    PopUP=L.popup().setContent("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora).setLatLng([data[0].latitud,data[0].longitud]).openOn(map);
+    PopUP=L.popup().setContent("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora + '<br> Taxi ' + data[0].ID).setLatLng([data[0].latitud,data[0].longitud]).openOn(map);
 }
 
 function LocationMarker(data){
@@ -321,7 +472,7 @@ function LocationMarker(data){
         DateTimeLocationMarker.removeFrom(map)
     }
     DateTimeLocationMarker = L.marker([data[0].latitud,data[0].longitud]);
-    DateTimeLocationMarker.bindPopup("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora);
+    DateTimeLocationMarker.bindPopup("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora + '<br> Taxi ' + data[0].ID);
     DateTimeLocationMarker.addTo(map)
 }
 
