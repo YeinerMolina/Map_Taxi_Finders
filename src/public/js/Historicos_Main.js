@@ -472,7 +472,7 @@ function LocationMarker(data){
         DateTimeLocationMarker.removeFrom(map)
     }
     DateTimeLocationMarker = L.marker([data[0].latitud,data[0].longitud]);
-    DateTimeLocationMarker.bindPopup("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora);
+    DateTimeLocationMarker.bindPopup("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora + '<br> Taxi ' + data[0].ID);
     DateTimeLocationMarker.addTo(map)
 }
 
