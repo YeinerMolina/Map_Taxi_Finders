@@ -9,6 +9,7 @@ LocationLayerGroup2 = L.featureGroup();
 PolyArray = [];
 DataTaxi1 = [];
 DataTaxi2 = [];
+DataTaxiT = [];
 click = false;
 
 Cargando = document.getElementById('CargaContainer');
@@ -170,6 +171,14 @@ TaxiDefiner.addEventListener('change',(event)=>{
             TimeLayerGroup2.addTo(map)
             LocationLayerGroup.addTo(map)
             LocationLayerGroup2.addTo(map)
+
+            DataTaxiT = DataTaxi1;
+            DataTaxiT = DataTaxiT.concat(DataTaxi2)
+            if(DataTaxiT !== 'undefined' && DataTaxiT.length > 0){
+                TableResultDeploy(DataTaxiT);
+            }
+            console.log(DataTaxiT)
+
         }
     
 })
@@ -395,6 +404,10 @@ function ActualizarHistoricosLocation(data){
     }else{
         LocationLayerGroup.addTo(map)
         LocationLayerGroup2.addTo(map);
+        DataTaxiT = DataTaxi1;
+        DataTaxiT = DataTaxiT.concat(DataTaxi2)
+        console.log(DataTaxiT)
+        TableResultDeploy(DataTaxiT);
     }    
     
 }

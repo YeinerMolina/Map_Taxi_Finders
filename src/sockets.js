@@ -147,7 +147,6 @@ function LocationTimeDetails(socket,TimeStamp){
             console.log(error);
         }else{
             socket.emit('Server: NewLatLngLocation',data)
-            console.log(data)
         }
     })
 }
