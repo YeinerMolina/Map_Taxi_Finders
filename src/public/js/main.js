@@ -153,14 +153,6 @@ function Actualizar(data){
 
 }
 
-var greenIcon = new L.Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
 
 //Actualice the marker position and poliline
 function UpdateMap(data){
@@ -199,7 +191,7 @@ function UpdateMap(data){
         
     }else if(data[0].ID == 2){
         PolyArrayT2.push([Lat,Lon]);
-        markerT2 = L.marker([Lat,Lon],{icon: greenIcon});
+        markerT2 = L.marker([Lat,Lon]);
         PolyLineT2 = L.polyline(PolyArrayT2,{color:'red'})
         markerT2.bindPopup("Posición actual taxi 2");
 
