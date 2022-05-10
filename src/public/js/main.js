@@ -178,7 +178,7 @@ function UpdateMap(data){
     if (typeof PolyLineT2 !== 'undefined'){
         map.removeLayer(PolyLineT2);
     }
-    
+
     if (data[0].ID == 1){
         PolyArrayT1.push([Lat,Lon]);
         markerT1 = L.marker([Lat,Lon]);
@@ -226,4 +226,3 @@ function UpdateMap(data){
         }
     }
 }
-
