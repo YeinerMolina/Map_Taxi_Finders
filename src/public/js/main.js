@@ -5,6 +5,15 @@ L.tileLayer(TileURL).addTo(map);
 PolyArrayT1 = [];
 PolyArrayT2 = [];
 
+var greenIcon = new L.Icon({
+    iconUrl: 'https://www.nicepng.com/png/full/23-230399_google-maps-pin-png-red-map-marker-png.png',
+     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
 toggle = document.querySelector(".toggle");
 toggle.addEventListener('click', () => {
     toggle.classList.toggle("active");
@@ -191,7 +200,7 @@ function UpdateMap(data){
         
     }else if(data[0].ID == 2){
         PolyArrayT2.push([Lat,Lon]);
-        markerT2 = L.marker([Lat,Lon]);
+        markerT2 = L.marker([Lat,Lon],{icon:greenIcon});
         PolyLineT2 = L.polyline(PolyArrayT2,{color:'red'})
         markerT2.bindPopup("Posición actual taxi 2");
 
