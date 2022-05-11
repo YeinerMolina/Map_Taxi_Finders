@@ -11,6 +11,11 @@ server.on('error',(err)=>{
 console.log("UDP Server on");
 server.on('message',(msg,rinfo)=>{
         const Mensaje = msg.toString().split(', ')
+        if (Mensaje.length==6){
+            RPM = Mensaje[5];
+        }else{
+            RPM = 0;
+        }
         Velocidad = Math.floor(Math.random() * (60 - 40 + 1) + 40)
         ID = Mensaje[4];
         hora = Mensaje[3];
@@ -18,8 +23,8 @@ server.on('message',(msg,rinfo)=>{
         Longitud = Mensaje[1];
         Latitud = Mensaje[0];
         
-        QueryInsert = `INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud,hora,Velocidad) value ?`;
-        value = [[ID,fecha,parseFloat(Latitud),parseFloat(Longitud),hora,Velocidad]];
+        QueryInsert = `INSERT INTO taxi.coordenadas (ID,fecha,latitud,longitud,hora,RPM) value ?`;
+        value = [[ID,fecha,parseFloat(Latitud),parseFloat(Longitud),hora,RPM]];
         connection.query(QueryInsert,[value], (error,data) =>{
             if(error){
                 console.log(error); 
