@@ -149,14 +149,14 @@ function Actualizar(data){
         longitud1.innerHTML = data.longitud
         fecha1.innerHTML = data.fecha.replace("T00:00:00.000Z","")
         hora1.innerHTML = data.hora
-        Velocidad1.innerHTML = data.Velocidad;
+        Velocidad1.innerHTML = data.RPM;
     }else if(data.ID==2){
         id2.innerHTML = data.ID             // innerHTML establece la conexion en los id's 
         latitud2.innerHTML = data.latitud
         longitud2.innerHTML = data.longitud
         fecha2.innerHTML = data.fecha.replace("T00:00:00.000Z","")
         hora2.innerHTML = data.hora
-        Velocidad2.innerHTML = data.Velocidad;
+        Velocidad2.innerHTML = data.RPM;
     }
     
 
