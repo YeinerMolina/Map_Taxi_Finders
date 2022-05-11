@@ -12,6 +12,17 @@ DataTaxi2 = [];
 DataTaxiT = [];
 click = false;
 
+
+var greenIcon = new L.Icon({
+    iconUrl: 'https://www.nicepng.com/png/full/23-230399_google-maps-pin-png-red-map-marker-png.png',
+     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+
 Cargando = document.getElementById('CargaContainer');
 
 
@@ -306,10 +317,11 @@ function ActualizarHistoricosTime(data){
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
 
-                marker = L.marker([data.latitud,data.longitud]);
-                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T00:00:00.000Z","") + "<br> Taxi " + data.ID);
+
+
 
                 if(data.ID==1){
+                    marker = L.marker([data.latitud,data.longitud]);
                     PolyLine1 = NewPolyline(HistoricsArray1);
                     TimeLayerGroup1.addLayer(marker);
                     TimeLayerGroup1.addLayer(PolyLine);
@@ -320,10 +332,12 @@ function ActualizarHistoricosTime(data){
                     if(TaxiDefiner.value=='Taxi 2' || TaxiDefiner.value=='Todos'){
                         center = [data.latitud,data.longitud];
                     }
+                    marker = L.marker([data.latitud,data.longitud],{icon:greenIcon});
                     PolyLine2 = NewPolyline(HistoricsArray2);
                     TimeLayerGroup2.addLayer(marker);
                     TimeLayerGroup2.addLayer(PolyLine2);
                 }
+                marker.bindPopup("Última ubicación del día: " + data.fecha.replace("T00:00:00.000Z","") + "<br> Taxi " + data.ID);
 
 
 
