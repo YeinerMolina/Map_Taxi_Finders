@@ -235,4 +235,3 @@ function UpdateMap(data){
         }
     }
 }
-
