@@ -14,12 +14,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-   
-
 </head>
 <body>
     <div id="container">
-    
         <div id="nav-var">
             <div id="logo">
                 <a href="/">
@@ -48,8 +45,6 @@
         <div id="carga"></div>
         <h4 id="Cargando">Cargando</h4>
     </div>
-    
-
     <div id="HistoricsContainer">
         <label><b>Indicar tipo de búsqueda:</b></label>
         <div class= "row">
@@ -83,13 +78,18 @@
     </div>
 
     <div id="TableContainer" style="display: none;">
-        <H2>Resultados detallados</H2>
-        <h6>Para resultados individuales de click sobre una línea o sobre una fila de la tabla</h6> 
-        <div id="tablediv">
-            <div style="height: 200px;overflow-y: scroll; overflow:auto;">
+        <div class="slidecontainer">
+            <h6>Taxi 1: </h6>
+            <input type="range" min="1" max="100" value="50" class="slider" id="Taxi1Range" style="display: none;">
+        </div>
+        <div class="slidecontainer">
+            <h6>Taxi 2: </h6>
+            <input type="range" min="1" max="100" value="50" class="slider" id="Taxi2Range" style="display: none;">
+        </div>
+        <div id="tablediv" style="display: none;">
+            <div style="height: 180px;overflow-y: scroll; overflow:auto;">
                 <table class="table table-bordered table-striped mb-0">
                     <thead>
-                    
                         <tr class = 'table-primary'>
                             <th scope="col">Fecha y Hora</th>
                         </tr>

@@ -140,6 +140,18 @@ LocationSearch = document.querySelector('#LocationSearch');
 //Searching button for time
 HistoricsForm = document.querySelector('#TimeSearch');
 
+Taxi1Range = document.getElementById('Taxi1Range');
+
+Taxi2Range = document.getElementById('Taxi2Range');
+
+Taxi1Range.oninput = ()=>{
+    data = DataTaxi1[Taxi1Range.value];
+    LocationDetails(data);
+}
+Taxi2Range.oninput = ()=>{
+    data = DataTaxi2[Taxi2Range.value];
+    LocationDetails(data);
+}
 
 
 
@@ -165,14 +177,16 @@ TaxiDefiner.addEventListener('change',(event)=>{
             TimeLayerGroup1.addTo(map)
             LocationLayerGroup.addTo(map)
             if(DataTaxi1 !== 'undefined' && DataTaxi1.length > 0){
-                TableResultDeploy(DataTaxi1);
+                Taxi1Range.style.display = '';
+                Taxi2Range.style.display = 'none';
             }
             
     
         }else if (Seleccionado == 'Taxi 2'){
     
             if(DataTaxi2 !== 'undefined' && DataTaxi2.length > 0){
-                TableResultDeploy(DataTaxi2);
+                Taxi1Range.style.display = 'none';
+                Taxi2Range.style.display = '';
             }
             TimeLayerGroup2.addTo(map)
             LocationLayerGroup2.addTo(map)
@@ -182,14 +196,8 @@ TaxiDefiner.addEventListener('change',(event)=>{
             TimeLayerGroup2.addTo(map)
             LocationLayerGroup.addTo(map)
             LocationLayerGroup2.addTo(map)
-
-            DataTaxiT = DataTaxi1;
-            DataTaxiT = DataTaxiT.concat(DataTaxi2)
-            if(DataTaxiT !== 'undefined' && DataTaxiT.length > 0){
-                TableResultDeploy(DataTaxiT);
-            }
-            console.log(DataTaxiT)
-
+            Taxi1Range.style.display = '';
+            Taxi2Range.style.display = '';
         }
     
 })
@@ -316,10 +324,6 @@ function ActualizarHistoricosTime(data){
         }
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
-
-
-
-
                 if(data.ID==1){
                     marker = L.marker([data.latitud,data.longitud]);
                     PolyLine1 = NewPolyline(HistoricsArray1);
@@ -395,7 +399,6 @@ function ActualizarHistoricosLocation(data){
         
         if(typeof FechaNext !== 'undefined'){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)||((data.DataNumber + 1) !== DataNumberNext)){
-                
                 if(data.ID==1){
                     PolyLine1 = NewPolyline(LocationArray);
                     LocationLayerGroup.addLayer(PolyLine1);
@@ -405,13 +408,12 @@ function ActualizarHistoricosLocation(data){
                 }
                 LocationArray=[];
                 LocationArray2=[];
-
             }
         }        
     })
     if(TaxiDefiner.value=='Taxi 1'){
         LocationLayerGroup.addTo(map)
-        TableResultDeploy(DataTaxi1);
+        Taxi1Range.style.display = '';
     }else if(TaxiDefiner.value == 'Taxi 2'){
         LocationLayerGroup2.addTo(map);
         TableResultDeploy(DataTaxi2);
@@ -420,10 +422,10 @@ function ActualizarHistoricosLocation(data){
         LocationLayerGroup2.addTo(map);
         DataTaxiT = DataTaxi1;
         DataTaxiT = DataTaxiT.concat(DataTaxi2)
-        console.log(DataTaxiT)
         TableResultDeploy(DataTaxiT);
-    }    
-    
+    }
+    Taxi1Range.max = DataTaxi1.length-1   
+    Taxi2Range.max = DataTaxi2.length-1   
 }
 
 function TableResultDeploy(data){
@@ -478,7 +480,7 @@ function NewPolyline(PolylineArray){
 }
 
 function LocationDetails(data){
-    PopUP=L.popup().setContent("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora + '<br> Taxi ' + data[0].ID).setLatLng([data[0].latitud,data[0].longitud]).openOn(map);
+    PopUP=L.popup().setContent("Fecha: " + data.fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data.hora + '<br> Taxi ' + data.ID).setLatLng([data.latitud,data.longitud]).openOn(map);
 }
 
 function LocationMarker(data){
