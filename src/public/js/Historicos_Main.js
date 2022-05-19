@@ -111,6 +111,8 @@ socket.on('Server: NewHistoricsLocation',(data)=>{
 
 TaxiDefiner = document.getElementById('Taxi');
 
+RadioSearch = document.getElementById('RadioSearch');
+
 //id for form container
 ContainerForm = document.querySelector('#HistoricsContainer')
 
@@ -152,8 +154,29 @@ Taxi2Range.oninput = ()=>{
     data = DataTaxi2[Taxi2Range.value];
     LocationDetails(data);
 }
+RadioSearch.oninput = ()=>{
+    RadioVar = RadioSearch.value;
+    if(RadioVar>=1000){
+        RadioText = 'Radio: ' + RadioVar/1000 + ' km';
+    }else{
+        RadioText = 'Radio: ' + RadioVar + ' m';
+    }
+    document.getElementById('RadioLabel').innerHTML = RadioText;
+    if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object && RadioVar!==''){
+        lat = theMarker.getLatLng().lat;
+        lon = theMarker.getLatLng().lng;
+        if(circle !== 'undefined'){
+            map.removeLayer(circle);
+        }
+        circle = L.circle([lat,lon],{radius: RadioVar}).addTo(map);
+    }else{
+        alert('Debe indicar el punto de busqueda en el mapa')
+    }
+}
 
-
+RadioSearch.onchange = ()=>{
+    requestRadioLocation();
+}
 
 TaxiDefiner.addEventListener('change',(event)=>{
 
@@ -239,50 +262,6 @@ HistoricsFormLocation.addEventListener('click',()=>{
     click = true;
 })
 
-LocationSearch.addEventListener('click',()=>{
-    //Function to send the center and the radious for the query of requiring historics of the location range
-    if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object){
-        ClearMap();
-        InitialDate = document.getElementById('DateI').value.split(' ');
-        FinalDate = document.getElementById('DateF').value.split(' ');
-    
-        TimeIVar = InitialDate[1];
-        DateIvar = InitialDate[0];
-        TimeFVar = FinalDate[1];
-        DateFvar = FinalDate[0];
-
-        LocationArray = {lat: theMarker.getLatLng().lat,
-                        lon: theMarker.getLatLng().lng,
-                        radio: RadioVar,
-                        DateI: DateIvar,
-                        DateF:DateFvar,
-                        TimeI: TimeIVar,
-                        TimeF: TimeFVar}
-        socket.emit("Client: RequiredHistoricosLocation", LocationArray);
-        Cargando.style.display = '';
-    }
-})
-
-ConfirmLocationButton.addEventListener('click',()=>{
-    RadioVar = document.getElementById('RadioForm').value;
-    ContainerResult.style.display = 'none';
-    if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object && RadioVar!==''){
-        lat = theMarker.getLatLng().lat;
-        lon = theMarker.getLatLng().lng;
-        if(circle !== 'undefined'){
-            map.removeLayer(circle);
-        }
-        circle = L.circle([lat,lon],{radius: RadioVar}).addTo(map);
-        LocationSearch.style.display = '';
-        TableRows.innerHTML = ''
-    }else if(RadioVar==''){
-        alert('Ingrese un radio válido')
-    }else{
-        alert('Debe indicar el punto de busqueda en el mapa')
-    }
-
-})
-
 function ClearMap(){
     LocationLayerGroup.clearLayers()
     LocationLayerGroup2.clearLayers()
@@ -326,7 +305,7 @@ function ActualizarHistoricosTime(data){
             if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
                 if(data.ID==1){
                     marker = L.marker([data.latitud,data.longitud]);
-                    PolyLine1 = NewPolyline(HistoricsArray1);
+                    PolyLine1 = NewPolyline(HistoricsArray1,'B');
                     TimeLayerGroup1.addLayer(marker);
                     TimeLayerGroup1.addLayer(PolyLine);
                     if(TaxiDefiner.value=='Taxi 1' || TaxiDefiner.value=='Todos'){
@@ -337,7 +316,7 @@ function ActualizarHistoricosTime(data){
                         center = [data.latitud,data.longitud];
                     }
                     marker = L.marker([data.latitud,data.longitud],{icon:greenIcon});
-                    PolyLine2 = NewPolyline(HistoricsArray2);
+                    PolyLine2 = NewPolyline(HistoricsArray2,'R');
                     TimeLayerGroup2.addLayer(marker);
                     TimeLayerGroup2.addLayer(PolyLine2);
                 }
@@ -387,7 +366,6 @@ function ActualizarHistoricosLocation(data){
         FechaAct = data.fecha.replace("T00:00:00.000Z","");
         if ((idx <= array.length - 2)){
             FechaNext = array[idx+1].fecha.replace("T00:00:00.000Z","");
-            DataNumberNext = array[idx+1].DataNumber;
         }
         if(data.ID==1){
             LocationArray.push([data.latitud,data.longitud])
@@ -398,12 +376,12 @@ function ActualizarHistoricosLocation(data){
         }
         
         if(typeof FechaNext !== 'undefined'){
-            if ((FechaAct !== FechaNext)||(idx === array.length - 1)||((data.DataNumber + 1) !== DataNumberNext)){
+            if ((FechaAct !== FechaNext)||(idx === array.length - 1)){
                 if(data.ID==1){
-                    PolyLine1 = NewPolyline(LocationArray);
+                    PolyLine1 = NewPolyline(LocationArray,'B');
                     LocationLayerGroup.addLayer(PolyLine1);
                 }else{
-                    PolyLine2 = NewPolyline(LocationArray2);
+                    PolyLine2 = NewPolyline(LocationArray2,'R');
                     LocationLayerGroup2.addLayer(PolyLine2);
                 }
                 LocationArray=[];
@@ -416,40 +394,24 @@ function ActualizarHistoricosLocation(data){
         Taxi1Range.style.display = '';
     }else if(TaxiDefiner.value == 'Taxi 2'){
         LocationLayerGroup2.addTo(map);
-        TableResultDeploy(DataTaxi2);
     }else{
         LocationLayerGroup.addTo(map)
         LocationLayerGroup2.addTo(map);
-        DataTaxiT = DataTaxi1;
-        DataTaxiT = DataTaxiT.concat(DataTaxi2)
-        TableResultDeploy(DataTaxiT);
     }
     Taxi1Range.max = DataTaxi1.length-1   
+    Taxi1Range.value = 1;
     Taxi2Range.max = DataTaxi2.length-1   
+    Taxi1Range.value = 2;
 }
-
-function TableResultDeploy(data){
-    $('#tbl-body-results').empty();
-    Row = '';
-    data.forEach((data,idx,array) => {
-        FechaAct = data.TimeStamp;
-        if ((idx <= array.length - 2)){
-            FechaNext = array[idx+1].TimeStamp;
-        }
-        if (FechaAct!==FechaNext){
-            Row  =  "<tr class = 'table-primary' ><td>" + data.fecha.replace("T00:00:00.000Z","") + ' ' + data.hora + "</td></tr>"
-            $('#tbl-body-results').append(Row);
-        }
-    })
-    
-}
-
 
 var theMarker = {};
 var circle = {};
 
 map.on('click',function(e){
+
      if(click){
+
+
         lat = e.latlng.lat;
         lon = e.latlng.lng;
 
@@ -460,14 +422,28 @@ map.on('click',function(e){
 
         //Add a marker to show where you clicked.
         theMarker = L.marker([lat,lon]).addTo(map);
+        
+        if(circle !== 'undefined'){
+            map.removeLayer(circle);
+        }
+        circle = L.circle([lat,lon],{radius: RadioSearch.value}).addTo(map);
+        requestRadioLocation();
      }
 })
 
-function NewPolyline(PolylineArray){
+function NewPolyline(PolylineArray,Type){
     var color;
-    var r = Math.floor(Math.random() * 200);
-    var g = Math.floor(Math.random() * 200);
-    var b = Math.floor(Math.random() * 200);
+    if(Type=='R'){
+        var r = Math.floor(Math.random() * 50 + 200) ;
+        var g = Math.floor(Math.random() * 150);
+        var b = Math.floor(Math.random() * 100);
+    }if(Type=='B'){
+        var r = Math.floor(Math.random() * 150) ;
+        var g = Math.floor(Math.random() * 150);
+        var b = Math.floor(Math.random() * 100 + 150);
+    }
+    
+
     color= "rgb("+r+" ,"+g+","+ b+")"; 
 
     PolyLine = L.polyline(PolylineArray,{ 
@@ -491,6 +467,32 @@ function LocationMarker(data){
     DateTimeLocationMarker.bindPopup("Fecha: " + data[0].fecha.replace("T00:00:00.000Z","") + '<br>  Hora: ' + data[0].hora + '<br> Taxi ' + data[0].ID);
     DateTimeLocationMarker.addTo(map)
 }
+
+function requestRadioLocation(){
+    RadioVar = RadioSearch.value;
+    if(Object.keys(theMarker).length !== 0 && theMarker.constructor !== Object && RadioVar>1){
+        ContainerResult.style.display = 'none';
+        ClearMap();
+        InitialDate = document.getElementById('DateI').value.split(' ');
+        FinalDate = document.getElementById('DateF').value.split(' ');
+
+        TimeIVar = InitialDate[1];
+        DateIvar = InitialDate[0];
+        TimeFVar = FinalDate[1];
+        DateFvar = FinalDate[0];
+
+        LocationArray = {lat: theMarker.getLatLng().lat,
+                        lon: theMarker.getLatLng().lng,
+                        radio: RadioVar,
+                        DateI: DateIvar,
+                        DateF:DateFvar,
+                        TimeI: TimeIVar,
+                        TimeF: TimeFVar}
+        socket.emit("Client: RequiredHistoricosLocation", LocationArray);
+        Cargando.style.display = '';
+    }
+}
+
 
 $(document).on('click','#tbl-body-results','tr',(e)=>{
     RowSelected = (String($(e.target).get(0).outerHTML));
