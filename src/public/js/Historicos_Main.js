@@ -146,6 +146,10 @@ Taxi1Range = document.getElementById('Taxi1Range');
 
 Taxi2Range = document.getElementById('Taxi2Range');
 
+taxi1Slider = document.getElementById('taxi1Slider');
+
+taxi2Slider = document.getElementById('taxi2Slider');
+
 Taxi1Range.oninput = ()=>{
     data = DataTaxi1[Taxi1Range.value];
     LocationDetails(data);
@@ -200,16 +204,16 @@ TaxiDefiner.addEventListener('change',(event)=>{
             TimeLayerGroup1.addTo(map)
             LocationLayerGroup.addTo(map)
             if(DataTaxi1 !== 'undefined' && DataTaxi1.length > 0){
-                Taxi1Range.style.display = '';
-                Taxi2Range.style.display = 'none';
+                taxi1Slider.style.display = '';
+                taxi2Slider.style.display = 'none';
             }
             
     
         }else if (Seleccionado == 'Taxi 2'){
     
             if(DataTaxi2 !== 'undefined' && DataTaxi2.length > 0){
-                Taxi1Range.style.display = 'none';
-                Taxi2Range.style.display = '';
+                taxi1Slider.style.display = 'none';
+                taxi2Slider.style.display = '';
             }
             TimeLayerGroup2.addTo(map)
             LocationLayerGroup2.addTo(map)
@@ -219,8 +223,8 @@ TaxiDefiner.addEventListener('change',(event)=>{
             TimeLayerGroup2.addTo(map)
             LocationLayerGroup.addTo(map)
             LocationLayerGroup2.addTo(map)
-            Taxi1Range.style.display = '';
-            Taxi2Range.style.display = '';
+            taxi1Slider.style.display = '';
+            taxi2Slider.style.display = '';
         }
     
 })
@@ -391,12 +395,18 @@ function ActualizarHistoricosLocation(data){
     })
     if(TaxiDefiner.value=='Taxi 1'){
         LocationLayerGroup.addTo(map)
-        Taxi1Range.style.display = '';
+        taxi1Slider.style.display = '';
+        taxi2Slider.style.display = 'none';
     }else if(TaxiDefiner.value == 'Taxi 2'){
         LocationLayerGroup2.addTo(map);
+        taxi1Slider.style.display = 'none';
+        taxi2Slider.style.display = '';
     }else{
         LocationLayerGroup.addTo(map)
         LocationLayerGroup2.addTo(map);
+        taxi1Slider.style.display = '';
+        taxi2Slider.style.display = '';
+
     }
     Taxi1Range.max = DataTaxi1.length-1   
     Taxi1Range.value = 1;
