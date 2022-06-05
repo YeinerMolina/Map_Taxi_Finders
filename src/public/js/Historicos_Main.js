@@ -393,6 +393,7 @@ function ActualizarHistoricosLocation(data){
             }
         }        
     })
+    
     if(TaxiDefiner.value=='Taxi 1'){
         LocationLayerGroup.addTo(map)
         taxi1Slider.style.display = '';
