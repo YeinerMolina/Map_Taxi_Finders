@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finders: Historicos</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+</head>
+<body>
+    <div id="container">
+        <div id="nav-var">
+            <div id="logo">
+                <a href="/">
+                    <img src="images/LogoWebPage.png" alt="LogoWebPage" id="LogoWebPage">
+                    <img src="images/Finders.png" alt="Finders" id="FindersLogo">
+                </a>
+            </div>
+            <div id="opciones">
+                <ul>
+                    <a href="/">Tiempo real</a>
+                </ul>
+                <div id="TaxiList">
+                    <form>
+                        <label for="TaxiList">Seleccione taxi: </label>
+                        <select name="TaxiList" id="Taxi" style="font-size: 20px;">
+                            <option>Taxi 1</option>
+                            <option>Taxi 2</option>
+                            <option>Todos</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div> 
+    
+    <div id="CargaContainer" style="display: none;">
+        <div id="carga"></div>
+        <h4 id="Cargando">Cargando</h4>
+    </div>
+    <div id="HistoricsContainer">
+        <label><b>Indicar tipo de búsqueda:</b></label>
+        <div class= "row justify-content-center">
+            <div class="HistoricsOptions">
+                <button id="TimeButton" class="btn btn-primary m-2">Fecha</button>
+                <button id="LocationButton" class="btn btn-primary m-2" style="display: none;">Ubicación</button>    
+            </div>
+        </div>
+        <div id="TimeForm" style="display: none">
+            <label for="DateI"><b>Fecha inicial</b></label>
+            <input type="text" id="DateI" class="form-control" /> 
+            <label for="DateF"><b>Fecha final</b></label>
+            <input type="text" id="DateF" class="form-control">
+            <button id="TimeSearch" class="btn btn-primary m-2">Buscar</button>
+        </div>
+        <div id="LocationForm" style="display: none">
+
+            <H5>Click en el mapa para definir área de busqueda</H5>
+            <div class="slidecontainer">
+                <h6>Radio de busqueda (1m - 5km): </h6>
+                <input type="range" min="1" max="5000" value="0" class="slider" id="RadioSearch">
+                <h6 id="RadioLabel">Radio: 0 m</h6>
+            </div>  
+        </div>
+    
+    </div>
+
+    <div id="TableContainer" style="display: none;">
+        <div id="taxi1Slider" style="display: none;">
+            <div class="slidecontainer">
+                <h6>Taxi 1: </h6>
+                <input type="range" min="1" max="100" value="50" class="slider" id="Taxi1Range"">
+            </div>    
+        </div>
+        <div id="taxi2Slider">
+            <div class="slidecontainer">
+                <h6>Taxi 2: </h6>
+                <input type="range" min="1" max="100" value="50" class="slider" id="Taxi2Range"">
+            </div>
+        </div>
+                
+    </div>
+    
+
+    <div id="map-template">
+
+    </div>
+                         
+                    
+    </div>
+   
+   
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script src="/socket.io/socket.io.min.js"></script>
+    <script src="/js/Historicos_Main.js"></script>
+
+    <script src="/js/DateTimePicker.js"></script>
+
+
+</body>
+</html>

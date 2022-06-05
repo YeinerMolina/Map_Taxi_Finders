@@ -4,51 +4,102 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taxi Locator</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <title>Finders: Inicio</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-        
 
-
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+   
 </head>
 <body>
-
     <div id="container">
 
-        <div id="map-template">
-            
+    <div id="nav-var">
+        <div id="logo">
+            <a href="/">
+                <img src="images/LogoWebPage.png" alt="LogoWebPage" id="LogoWebPage">
+                <img src="images/Finders.png" alt="Finders" id="FindersLogo">
+            </a>
         </div>
-    
-        <div id="table-container">
-            <table class="text" id="table-LastPosition">
-                <b style="font-size: 18px;">Última ubicación</b>
-                <tr>
-                    <td>ID:</td><td id="id"> -- </td>
-                </tr>
-                <tr>
-                    <td>Latitud:</td><td id="latitud"> -- </td>
-                </tr>
-                <tr>
-                    <td>Longitud: </td><td id="longitud"> --</td>
-                </tr>
-                <tr>
-                    <td>Fecha: </td><td id="fecha"> --
-                </td>
-                </tr>
-                <tr>
-                    <td>Hora:</td><td id="hora"> -- </td> 
-                </tr>
-                </tr>
-            </table>
+        <div id="opciones">
+            <ul>
+                <a href="/Historicos">Historial</a>
+            </ul>
+            <div id="TaxiList">
+                <form>
+                    <label for="TaxiList">Seleccione taxi: </label>
+                    <select name="TaxiList" id="Taxi" style="font-size: 20px;">
+                        <option>Taxi 1</option>
+                        <option>Taxi 2</option>
+                        <option>Todos</option>
+                    </select>
+                </form>
+            </div>
         </div>
-    </div>
-    
-    	
+    </div> 
 
+    <div id="map-template">
+
+    </div>
+
+    <div id="LastPositiontable-container">  
+        <b>Última ubicación <br></b>        
+        <table class="text" id="table-LastPosition">
+            <tr>
+                <td>ID:</td>
+                <td id="id1"> -- </td>
+                <td id="id2" style="display: none;"> -- </td>
+            </tr>
+            <tr>
+                <td>Latitud:</td>
+                <td id="latitud1"> -- </td>
+                <td id="latitud2" style="display: none;"> -- </td>
+            </tr>
+            <tr>
+                <td>Longitud: </td>
+                <td id="longitud1"> -- </td>
+                <td id="longitud2" style="display: none;"> -- </td>
+            </tr>
+            <tr>
+                <td>Fecha: </td>
+                <td id="fecha1"> --  </td>
+                <td id="fecha2" style="display: none;"> --  </td>
+            </tr>
+            <tr>
+                <td>Hora:</td>
+                <td id="hora1"> -- </td>
+                <td id="hora2" style="display: none;"> -- </td>
+            </tr>
+            <tr>
+                <td>RPM: </td>
+                <td id="Velocidad1"> -- </td>
+                <td id="Velocidad2" style="display: none;"> -- </td> 
+            </tr>
+        </table>
+    </div>
+                    
+    <div class="Location-fixer" id="Location-fixer" style="display: none;">
+        <b>Centrar</b>
+        <div class="toggle-Taxi-2">Taxi 2</div>
+        <div class="toggle">
+            <div class="toggle-button"></div>
+        </div>
+        <div class="toggle-Taxi-1">Taxi 1</div>
+    </div>
+                    
+                    
+    </div>
+   
+   
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
     <script src="/socket.io/socket.io.min.js"></script>
     <script src="/js/main.js"></script>
+
 </body>
 </html>
